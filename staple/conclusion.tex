@@ -1,0 +1,13 @@
+We were able to tackle three problems in discrete optimization from an experimental algorithmics standpoints.  
+
+Our first chapter provided an example of a simple problem to state that manages to be deceptively difficult to solve. The class of rearrangement problems with unknown final configurations has some real world applications to which we hope a generalization of our two step approach will be applied.  
+
+Experimentally, this problem was very easy to approach because the optimal solution could be bounded trivially.  Those experiments quickly lead to an unexpected result: our results showed that we had ignored second order behaviors when determining our structure.  The algorithm we had developed was not, as we had hoped, an optimal algorithm. Having an impartial, emotionless reviewer checking our claims helped to strengthen them.
+
+In the genetic interval chapter, computer simulations of bad greedy cases illustrated the problem’s behavior and informed our future intuitions. Simulations quickly teased out that the greedy approach’s worst case score was no better than $\frac34$ of opt, but that was their most trivial application.
+
+There were two unexpected theoretical breakthroughs that we would not have spotted without performing experiments. Implementation of an efficient method to score partially covered defects caused us to formulate the concept of primitives. Without primitives, we had no integer programming formulation. The structure of the experimentally generated bad non-overlapping (i.e. 1-depth DP) cases also allowed us to answer no to the question of whether our linear progamming relaxation was total unimodular and thus trivial.
+
+Our final chapter, the waiter problem, was structured as an algorithmic battle royale. Many reasonable approaches were brought to bear on the problem and their behaviors compared.  The most interesting experimental outcome from this chapter was that it showed a place for the oft maligned black-box genetic algorithm optimization techniques in an OR setting.  Instead of setting up a fitness function and letting the genetic algorithm do all of the heavy lifting, we let a GA take our suite of algorithm through their paces.  The hybrid approach gave us more consistently challenging cases than the purely random case generation it replaced.
+
+We have demonstrated experimentally guided algorithm development for three problems in combinatorial optimization.  Without the insights (especially the serendipitous) provided by analyzing experimental outputs we would have not been able to so thoroughly probe and document the complex bahaviors of our problems.

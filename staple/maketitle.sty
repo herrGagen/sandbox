@@ -1,0 +1,41 @@
+\if@titlepage
+\renewcommand{\maketitle}{\begin{titlepage}%
+\let\footnotesize\small
+\let\footnoterule\relax
+\let \footnote \thanks
+\null\vfil
+\vskip 60\p@
+{\titlefont \@title \posttitle}
+{\authorfont \@author \postauthor}
+{\datefont \@date \postdate}
+\par
+\@thanks
+\vfil\null
+\end{titlepage}%
+\setcounter{footnote}{0}%
+\@bsmtitlempty
+} % end titlepage defs
+\else
+\renewcommand{\maketitle}{\par
+\begingroup
+\renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+\def\@makefnmark{\rlap{\@textsuperscript{\normalfont\@thefnmark}}}%
+\long\def\@makefntext##1{\parindent 1em\noindent
+\hb@xt@1.8em{%
+\hss\@textsuperscript{\normalfont\@thefnmark}}##1}%
+\if@twocolumn
+\ifnum \col@number=\@ne
+\@maketitle
+\else
+\twocolumn[\@maketitle]%
+\fi
+\else
+\newpage
+\global\@topnum\z@
+\@maketitle
+\fi
+\thispagestyle{plain}\@thanks
+\endgroup
+\setcounter{footnote}{0}%
+\@bsmtitlempty
+} % end non-titlepage

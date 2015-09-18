@@ -1,0 +1,34 @@
+\ProvidesPackage{mystyle}
+
+\pagestyle{empty}
+
+\usepackage{tikz} % Pretty pictures, google tikzmanual.pdf
+\usetikzlibrary{arrows,decorations.pathmorphing,backgrounds}
+
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+
+\usepackage{float}
+\usepackage{amsmath}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsthm}
+\usepackage{tabularx}
+\usepackage{placeins}
+\usepackage{rotating}
+\usepackage{wasysym}
+
+%\usepackage[paperwidth=8.5in,paperheight=11in,hmargin=.75in,vmargin=.75in]{geometry}
+\usepackage{color, colortbl}
+
+\newtheorem{thm}{Theorem}[section] 
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{cor}[lem]{Corollary}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\definecolor{citrine}{rgb}{0.89, 0.82, 0.04}
+
+\setcounter{secnumdepth}{5} % Count \paragraphs as \subsubsubsection
+

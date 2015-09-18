@@ -1,0 +1,670 @@
+\section{Introduction}
+
+The waiter problem is fairly easy to define.  Given a set $x_i \in X$ of unit point masses, we seek an ordering $\pi_i$ that optimizes a measurement on the partial centers of mass $C_j = \frac{\sum_{i=1}^j x_{\pi_i} }{ j }$. 
+
+The measurement that we choose to optimize over is the length of the continuous interval $[L,R]$ that contains the set of $C_j$.  Other measurements proposed.  were the radius of a symmetric interval $[-r,r]$ containing all $C_j$, and the decision version of this problem: can the masses $x_i$ be placed in such an order that the partial center of mass never leaves the given interval $[A,B]$.  
+
+Any input set $y$ can be transformed to have a final center of mass at 0 and  $\max |x_i| = 1$,  with the following transformation: $y_i \rightarrow \frac{y_i - \bar{y} }{\max(|y_i| - \bar{y}) }$.
+
+\section{Literature Review}
+
+
+While the problem that we are solving is novel, it is closely related to two well researched problems in the literature.  The first class of problems ask how to best pack one dimensional boxes into one dimensional containers.  
+
+In \cite{mathur1998integer}, the problem under consideration is to pack one dimensional boxes into a container in such away that the center of mass is as close as possible to a target point.  This differs from our problem because the center of mass after each box is placed is never considered.  Optimizing the final position was worked on a few years earlier in \cite{amiouny1992balanced}, who showed it to be strongly NP hard by a reduction from 3 partition. They used the obvious idea of sorted orderings that we'll heavily rely on in this paper.  Another notable example of box packing was seen in \cite{davies1999weight} where they generalized the final position problem to be two dimensional, thus introducing an added complexity layer of closest packing (in addition to weight balance).
+
+We see another approach to the packing problem in \cite{fasano2004mip} where he showed a mixed integer programming model whose answer would be an optimal packing of boxes.  Recently, a similar mixed integer programming approach was used in the practical application  of loading cargo airplanes \cite{limbourg2012automatic}.  
+
+While the above are simliar to our problem, they all differ by not requiring that the center of mass be measured and constrained with each additional weight added.  A problem that requires such a constraint check at each step is {\it compact vector summation} or CVS. 
+
+In CVS the problem is to specify an order to sum a number of $k-$dimensional vectors and keep every partial sum within a $k-$dimensional ball of fixed radius. In \cite{sevast1994some} we find an excellent summary of results in CVS and their application to job scheduling problems, this is updated with further results in \cite{sevastianov1998nonstrict}.  Because of the similarity between ours and the job scheduling problem, many of the heuristic approaches referenced in \cite{framinan2004review} and \cite{gupta2006performance} can be translated directly into heuristics for our problem, though we should be careful as certain bad cases for CVS \cite{chelidze2010greedy} are trivial in our problem.
+
+\section{NP Completeness}
+
+The waiter problem is NP complete, and the reduction is from 3-partition.  But before we prove this, we require one simple lemma.
+
+\begin{lem} \label{lem:zerosChangeNothing} 
+Placing a point at 0 (the final center of mass) never reduces the number of legal future moves.  
+\end{lem}
+
+\begin{proof}
+When we place a point $x_{\pi_n}$, it will cause our center of mass to leave the current interval $[L, R]$ if either:
+
+\begin{align*} 
+\sum_{i=1}^{n-1} x_{\pi_i} + x_{\pi_n} &> n R \\
+\sum_{i=1}^{n-1} x_{\pi_i} + x_{\pi_n} &< n L
+\end{align*}
+
+In other words, all legal values for the point $x_{\pi_n}$ lie in the interval $[ n L - \sum_{i=1}^{n-1} x_{\pi_i}, n R - \sum_{i=1}^{n-1} x_{\pi_i}] $
+
+If our original sum over $n$ elements contained none with a value of zero, and our new sums contain $k$ elements with a value or zero, then the new inteval of all legal values is:
+
+\begin{eqnarray*}
+\Sigma &=& \sum_{i=1}^{n-1} x_{\pi_i} + \sum_{j=1}^k 0 \\
+x_{\pi_n} &\leq& (n+k) R - \Sigma \\
+x_{\pi_n} &\geq& (n+k) L - \Sigma \\
+x_{\pi_n} &\in& [ (n+k) L - \Sigma, (n+k) R - \Sigma ]
+\end{eqnarray*}
+
+$\forall L, R$ with $L \leq R$ this is larger than our initial range of:
+
+\begin{equation*}
+x_{\pi_n} \in [ (n L - \Sigma, n R - \Sigma ]
+\end{equation*}
+
+Since our final center of mass is located at 0, and must be contained in our interval, we know that $L\leq 0$ and $R\geq 0$ so our initial range of values is a subinterval of the range allowed after placing the zeros.
+\end{proof}
+
+\begin{thm}\label{thm:completeness}
+Given an instance of 3-partition where $ |x_i| = 3N, \forall_i \frac{1}{4} < x_i < \frac{1}{2} $, we can reduce it to an instance of the 1 dimensional waiter problem in polynomial time.  
+\end{thm}
+
+\begin{proof}
+Our set of weights will fall into 3 categories.  There will be $M$ masses to place at 0 (which will be the final center of mass), there will be $N$ masses to place at $-1$ and the remaining $3N$ masses will all be placed at the positions $x_i$ corresponding to our 3-partition instance.
+
+By lemma \ref{lem:zerosChangeNothing}, we can say that instead of requiring a non-polynomial reduction where $M$, the number of weights located at point 0, wasn't polynomial in input size and required we have that many weights in the instance, we can instead place those $M$ weights in $ O(1) $ time and tackle the remaining $ 3N + N$ weights in our reduction.
+
+In order to remain in the interval $[0, \frac{1}{M}]$, whenever we seek to place one of our $x_i = -1$ weights, the running sum must be exactly 1.
+
+\begin{eqnarray*}
+\Sigma &=& \sum_{i=1}^{n-1} x_{\pi_i} + \sum_{j=1}^M 0 \\
+x_i &\leq& (n+M) R - \Sigma \\
+x_i &\leq& \frac{n}{M} + \frac{M}{M}- \Sigma = 1 - \Sigma \\
+x_i &\geq& (n+M) L - \Sigma = 0 - \Sigma \\
+x_i &\in& [ - \Sigma, 1 - \Sigma ]
+\end{eqnarray*}
+
+Positive $x_i$ weights can be placed whenever $x_i + \Sigma < 1$ and the negative values can be placed whenever $ -1 \in [\Sigma, 1-\Sigma] $, or $ \Sigma >= 1$.  But if $ \Sigma > 1$, we have the center of mass $ C = \frac{\Sigma}{k+M} \approx \frac{\Sigma}{M} > \frac{1}{M}$ where the approximation approaches equality as $ M \rightarrow \infty$.
+
+This means our negative weights can only be placed when $\Sigma = 1$, i.e. when three positive masses have been placed that sum to 1.  Deciding if this can be repeated $N$ times is exactly the 3-partition question, which is NP-hard.
+\end{proof}
+
+The requirement that $\frac{\Sigma}{n+M} \leq \frac{1}{M}$ for all $\Sigma$ can allow us to set a lower bound for $M$.  As the greatest value $k$ will hold is $4n$, this gives us the requirement that:
+
+\begin{equation*}
+\Sigma \leq 1 + \frac{4n}{M}
+\end{equation*}
+
+TO ensure this is never violated, we find the smallest sum of 3 or 4 $x_i$ that is strictly greater than 1 and call this sum $1+\epsilon$.  When $\epsilon > \frac{4n}{M}$, all sums of 3 elements that are greater than $1$ are greater than $1 + \frac{k}{M}$ for all $k\leq 4n$.  
+
+\section{Analytical Bounds}
+
+\subsection{Naive Bound}
+
+Throughout this section, we are requiring that $ \sum_i x_i = 0 $, an assumption that can be satisfied by transforming any input set $ y_i $ into $ x_i = y_i - \bar{y}$. 
+
+We will show that $|R-L| \geq \frac{|x_i|}{i} $ is a naive lower bound on the optimum difference between the left and right endpoint of the interval containing the center of mass (hereafter $ C_i \in [ L, R ] $) if our masses are sorted by distance from the origin. 
+
+Observation:
+
+Adding a new point moves the current center of mass according to:
+
+\begin{eqnarray*}
+c_i = \frac{ x_i + \sum_{j=1}^{i-1} x_j }{ i } \\ 
+c_i = \frac{ (i-1) c_{i-1}}{i} + \frac{x_i }{ i }  \\
+c_i - c_{i-1} = \frac{x_i - c_{i - 1} }{ i } \\
+|c_i - c_{i-1}| = \Delta C \leq |R - L|
+\end{eqnarray*}
+
+\begin{lem} \label{lem:matchSignNaive}
+If $\textrm{sign}(c_i) = \textrm{sign}(c_{i-1})$ then $|R - L| \geq \frac{x_i}{i}$
+\end{lem}
+
+\begin{proof}
+Continuing from above:
+
+\begin{eqnarray*}
+c_i - c_{i-1} = \frac{x_i - c_{i - 1} }{ i } \\
+c_i = c_{i-1}( \frac{i-1}{i}) + \frac{x_i }{ i } \\
+\big|c_i\big| = \big|c_{i-1} (\frac{i-1}{i}) + \frac{x_i }{ i }\big| \\
+S = \textrm{sign}(c_{i-1} )*\textrm{sign}(x_i) \\
+\big|c_i\big| = \big|c_{i-1} \big( \frac{i-1}{i} \big)\big| + S\big|\frac{x_i}{ i }\big|
+\end{eqnarray*}
+
+There are two cases:
+
+Case 1, $\textbf{S = +1}$: 
+
+\begin{eqnarray*}
+\big|c_i\big| = \big|c_{i-1} \big( \frac{i-1}{i} \big) \big| + \big|\frac{x_i}{i}\big| \\
+\rightarrow \big|c_i\big| \geq \big|\frac{x_i}{i}\big| \\ 
+\big|R-L\big| \geq \big|c_i\big| \textrm{By definition of } R,L \\
+\rightarrow \big|R-L\big| \geq \big|\frac{x_i}{i}\big|
+\end{eqnarray*}
+
+Case 2, $\textbf{S = -1}$: 
+
+\begin{eqnarray*}
+\big|c_i\big| = \big|c_{i-1} \big( \frac{i-1}{i} \big)\big| - \big|\frac{x_i}{i}\big| \\
+\big|\frac{x_i}{i}\big| + \big|c_i\big| = \frac{i-1}{i}\big|c_{i-1}\big|  \\
+\big|c_{i-1}\big| = \frac{i}{i-1}\big|\frac{x_i}{i}\big| + \frac{i}{i-1}\big|c_i\big| \\
+\big|c_{i-1}\big| \geq = \frac{i}{i-1}\big|\frac{x_i}{i}\big| \\
+\rightarrow \big|c_{i-1}\big| \geq \big|\frac{x_i}{i}\big| \\
+\big|R-L\big| \geq \big|c_{i-1}\big| \textrm{By definition of } R,L \\ 
+\rightarrow \big|R-L\big| \geq \big|\frac{x_i}{i}\big|
+\end{eqnarray*}
+\end{proof}
+
+\begin{lem} \label{lem:diffSignNaive}
+If $\textrm{sign}(c_i) \neq \textrm{sign}(c_{i-1})$ then $\big|R - L\big| \geq \frac{x_i}{i}$
+\end{lem}
+
+\begin{proof}
+First, $\textrm{sign}(c_i) = \textrm{sign}(x_i)$  is trivially true as a positive $c_i$ can't be the sum of two negative numbers, and conversely a negative $c_i$ can't be the sum of two positive numbers.  Then we continue:
+
+\begin{eqnarray*}
+c_i = c_{i-1}\frac{i-1}{i} + \frac{x_i }{ i } \\ 
+c_i - c_{i-1} = \frac{x_i}{i} - \frac{c_{i-1}}{i} \\
+\big|c_i - c_{i-1}\big| = \big|\frac{x_i}{i} - \frac{c_{i-1}}{i}\big| \\
+\big|c_i - c_{i-1}\big| = \big|\frac{x_i}{i}\big| + \big|\frac{c_{i-1}}{i}\big| \\
+\big|c_i - c_{i-1}\big| \geq \big|\frac{x_i}{i}\big|  \\
+\big|R-L\big| \geq \big|c_i - c_{i-1}\big| \textrm{By definition of } R,L \\
+\big|R-L\big| \geq \big|\frac{x_i }{ i }\big|
+\end{eqnarray*}
+
+\end{proof}
+
+By combining Lemmas \ref{lem:matchSignNaive} and \ref{lem:diffSignNaive}, we get:
+
+\begin{thm} \label{thm:naiveBound}
+For any ordering of $x_i$ the interval containing the center of mass satisfies: $\forall_i \big|R-L\big| \geq \frac{\big|x_i\big|}{i} $
+\end{thm}
+
+\begin{cor} \label{cor:naiveBound}
+For any valid solution to the waiter problem, $|R-L| \geq \frac{|x_i|}{i}$ where $x_i$ is the mass whose position has the $i^{th}$ smallest magnitude.
+\end{cor}
+
+\subsubsection{Non-tightness of Naive Bound} \label{subs:naiveCounter}
+
+The above bound is not particularly tight, as is evidenced by the following counterexample:
+
+Allow the first $k$ $x_i$ to all be positive and have values of $i$.  Let $ x_{k-1} = -k $ and then require $ \forall_{ i > k}, -1 \leq \frac{x_i}{i} \leq 0 $ giving us a value of 1 for our naive bound on interval width.
+
+The actual center of mass achieved by placing the masses in this order is: $ c_k = \frac{1}{k} \sum_{i=1}^k i = \frac{k-1}{2} $.
+
+The optimal center of mass interval is shorter than this, as we can add positive weights in order until $ c_l = \frac{k}{l} $ which occurs approximately when $ \frac{l^2 - l}{2} = k \rightarrow l \approx 2\sqrt{k} $. This gives us a center of mass of $ c_l \approx \frac{\sqrt{k}}{2} $.  This is arbitrarially better than our naive lower bound.
+
+\subsection{Tentpole Bound} \label{subs:tentpoleBound}
+
+If we separate the masses into a positive list $ p $ and a negative list $ n $ and sort these both by absolute value, we can bound the optimum solution in the following manner:
+
+\begin{eqnarray*}
+|R-L| \geq \frac{p_{i}}{\pi^+_i} \\
+|R-L| \geq \frac{|n_{i}|}{\pi^-_i} \\
+\end{eqnarray*} 
+
+Where the tentpole permutation orders $ \pi^+, \pi^- $ are defined as follows:
+
+\begin{eqnarray*}
+\pi^+_j = j + \max_k \{ k \; :\; \sum_{i=1}^k |n_i| \leq \sum_{l=1}^j p_l \}  \\
+\pi^-_j = j + \max_k \{ k \; :\; \sum_{i=1}^k p_i \leq \sum_{l=1}^j |n_l| \} \\
+\end{eqnarray*} 
+
+The definition of the tentpole ordering is fairly straightforward: we place our masses at the latest possible point where they don't allow the $\sqrt{n}$ bad case to occur.  We first place the smallest absolute value mass and make that list (either positive or negative) active.  That list remains active (and we place its members in increasing order) until placing its next member would move the center of mass so far that placing the head of the inactive list would not change the sign of our center of mass.  Instead of letting this happen, we switch active lists.
+
+The name tentpole comes from the idea that optimally placing a very large magnitude element will move our center of mass from $R$ before it is placed to $L$ after, i.e. that element will be like a tentpole, touching the entire span of our center of mass range.
+
+In the following sections, we will prove this bound is a minimum bound.
+
+\subsubsection{Bounds on $|R - L|$}
+
+\begin{lem} \label{lem:increasingOrder} 
+For any input set to the waiter problem, where $s_i$ are all terms with the same sign sorted by magnitude, the min-max of the ratio $\frac{|s_i|}{\pi_i}$ must occur when $\forall_{k<i} \pi_k < \pi_i$.  
+\end{lem}
+
+\begin{proof}
+$s_i$ is a stand in for either our positive or negative vectors that are sorted by magnitude. By contradiction, we assume min-max $\frac{|s_i|}{\pi_i}$ occurs at an $i$ where $\exists_{k<i} \pi_i < \pi_k$.  
+
+Because the inputs are sorted, $|s_k| \leq |s_i|$.  Exchanging the two would lead to two new ratios in our sequence: $\frac{|s_i|}{\pi_k}$ and $\frac{|s_k|}{\pi_i}$.
+
+\begin{eqnarray*}
+\textrm{From } \pi_k > \pi_i \\
+\frac{|s_i|}{\pi_k} < \frac{|s_i|}{\pi_i} \\
+\textrm{Since } |s_k| \leq |s_i| \\
+\frac{|s_k|}{\pi_i} \leq \frac{|s_i|}{\pi_i} \\
+\end{eqnarray*}
+
+These new ratios being lower than $\frac{|s_i|}{\pi_i}$ contradict the assumption that it was the lowest possible maximum value of this ratio.
+\end{proof}
+
+\begin{lem} \label{lem:tentBeforeBad}
+For the $i$ maximizing the quantity $\frac{|s_i|}{\pi_i}$ in the tentpole bound, any ordering placing this element earlier than $\pi_i$ has a span $|R-L| > \frac{|s_i|}{\pi_i}$.
+\end{lem}
+
+\begin{proof}
+This follows from trivial application of theorem \ref{thm:naiveBound}.
+\end{proof}
+
+\begin{lem} \label{lem:tentAfterBad}
+For the $i$ maximizing the quantity $\frac{|s_i|}{\pi_i}$ in the tentpole bound, any ordering placing this element later than $\pi_i$  has a span $|R-L| > \frac{|s_i|}{\pi_i}$.
+\end{lem}
+
+\begin{proof}
+WOLG we are going to assume $s_i$ is positive, in the tentpole ordering we have placed $J-1$ positive elements, before $s_i$ and $K$ negative elements.  Clearly, $J+K=i$.  Next, we define the useful variable $S$, and restate the tentpole ordering relation for $\pi^+_j$ in terms of $S$:
+
+\begin{align*}
+S = \sum_{k=1}^{K} n_k + \sum_{j=1}^{J-1} p_j \\
+S < p_J < |S + n_{K+1}| \\
+\end{align*}
+
+If $p_J$ isn't placed during this step, then somewhere in the first $i$ placements, we added another positive or negative element.  We will show that placing a positive or negative element in place of $p_J$ will increase the span.
+
+If that replacement element, $x$, is positive, the lowest value it can hold is $p_{J+1} > p_J$.  Replacing $p_J$ by $x$ results in a center of mass at this step greater than that from the tentpole bound:
+
+\begin{align*}
+c_i^* = \frac{S + x}{K +J} \\
+x > p_j \\
+c_i^* > c_i \geq \frac{p_J}{\pi^+_J} \\
+\end{align*}
+
+If $x$ is negative, its minimum magnitude is $n_{K+1}$ and we get:
+
+\begin{align*}
+c_i^* = \frac{S + x}{K +J} \\
+|S+x| \geq |S+n_{K+1}|  > p_j \\
+|c_i^*| > c_i \geq \frac{p_J}{\pi^+_J} \\
+\end{align*}
+
+
+\end{proof}
+
+\begin{thm} \label{thm:tentpoleBound}
+The tentpole permutations minmax the quantity $\frac{|s_i|}{\pi_i}$, and thus represent a lower bound on $|R-L|$.
+\end{thm}
+
+\subsubsection{Tentpole Placement Heuristic} \label{sec:tentpoleHeuristic}
+
+If we place our masses in the order perscribed by the $\pi^+_i$ and $\pi^-_i$ from the tentpole ordering, how close to optimal will this ordering be? In this section, we'll scale distance so that the maximum of the tentpole ratio $\frac{s_i}{\pi_i} = 1$, and use our partial sum notation of $S_i$ as above:
+
+\begin{align*}
+S_i = \sum_{k=1}^{K} n_k + \sum_{j=1}^{J} p_j \\
+\end{align*}
+
+The tentpole ordering ensures that $s_i$ will be placed at the latest point where it will cause a change in the sign of the running sum. In other words, $s_i \geq |S|$.  If the inequality is tight, the center of mass before placing $s_i$ was:
+
+\begin{align*}
+\frac{S}{\pi_i -1} = \frac{s_i}{\pi^+_i -1} > \frac{s_i}{\pi_i} \\
+\end{align*}
+
+This tells us that the center of mass can be a bit greater in magnitude than the tentpole bound the following theorem tells us how bad a constant ratio we can promise for the tentpole ordering as a placement heuristic.
+
+\begin{thm} \label{thm:tentpoleHeuristicBound}
+If we use the tentpole ordering as a placement heuristic, it gives us a result no worse than 2.7 times wider than the tentpole width of $\max \frac{s_i}{\pi_i}$.
+\end{thm}
+
+\begin{proof}
+Because we've redefined length so the ratio of $\frac{s_i}{\pi_i} = 1$, we can say $\forall_i, |s_i | \leq i$.
+
+From the tentpole ordering we know that:
+
+\begin{align*}
+|S_i| < |s_{i+1}| \\
+|S_i| < i+1 \\
+c_i = \frac{S_i}{i} \leq \frac{i+1}{i} \\
+\end{align*}
+
+If we define $a$ and $b$ as the indices where we stop going left and right, then we can say:
+
+\begin{align*}
+|L| \leq \frac{a+1}{a} = 1 + \frac{1}{a}\\
+R \leq \frac{b+1}{b} = 1 + \frac{1}{b}\\
+|R-L| \leq 2 + \frac{1}{a} + \frac{1}{b} \\
+\end{align*}
+
+From this we obviously want $a$ and $b$ as small as possible, but wecalling that in order to get from $L$ (which we approach first) to $R$, we have to conitnue respecting our $|s_i| \leq i$ constraint and that gives us the following set of constraints:
+
+\begin{align*}
+|L| = |\sum_{i=1}^a s_i| = \frac{|S_a|}{a} \leq \frac{a(a+1)}{2a} \\
+R = \sum_{i=1}^b s_i = \frac{S_b}{b} \leq \frac{b(b+1)}{2b} \\
+S_b - |S_a| =  \sum_{i = a+1}^b s_i \leq \frac{b(b+1)}{2} - \frac{(a+2)(a+1)}{2} \\
+\end{align*}
+
+This final difference is zero unless $b \geq a+2$. Now we just start calculating the ratio $R(a,b)$ of tentpole width vs tentpole ratio of $\frac{s_i}{i} = 1$:
+
+\nobreak{
+\textbf{$R(1,3) = 2\frac13$}
+
+\begin{align*}
+\sum_{i=1}^1| s_i| \leq l \leq |L| \\
+\sum_{i=2}^3 s_i \leq 4  \\
+R \leq \frac{4}{3} \\
+|R-L| \leq 2 \frac{1}{3} \\
+\end{align*}
+}
+
+\textbf{$R(1,(n>3)) < 2\frac13$}
+
+\nobreak{
+\textbf{$R(2,4) = 2 \frac12$}
+
+\begin{align*}
+\sum_{i=1}^2 s_i \geq -3  \\
+|L| \leq \frac{3}{2} \\
+\sum_{i=3}^4 s_i \leq 7  \\
+R \leq \frac{7-3}{4} = 1 \\
+|R-L| \leq 2 \frac{1}{2} \\
+\end{align*}
+}
+
+\nobreak{
+\textbf{$R(2,5) = 2.7$}
+
+\begin{align*}
+\sum_{i=1}^2 s_i \geq -3  \\
+|L| \leq \frac{3}{2} \\
+\sum_{i=3}^5 s_i \leq 12  \\
+S_5 \leq 6 \\
+R \leq \frac{6}{5} \\
+|R-L| \leq 2 \frac{7}{10} \\
+\end{align*}
+}
+
+\textbf{$R(2,(n>5)) < 2.7$}
+
+\end{proof}
+
+\section{Selected Algorithm Descriptions}
+
+The three algorithms we tried that require detailed explanations are the tentpole placement heuristic,  \texttt{Tentpole}, described in section \ref{sec:tentpoleHeuristic}; the price is right heuristic, \texttt{PriceIsRight}; and the optimal sorted algorithm, \texttt{Staircase}.
+
+\subsection{Price Is Right Heuristic} \label{subs:PIR}
+
+The price is right algorithm is designed to answer a similar but not identical problem to the one at hand: given a specific input interval $[L,R]$, can we select an ordering of point placements that keep the center of mass inside of that given interval.  Our insight was that instead of placing points in as conservative a manner as possible, we should aim for the center of mass to get as close to the interval boundaries as possible.  Whether this ordering would keep us inside the input interval is answered by \texttt{PriceIsRightQuery($x$,$L$,$R$)}.
+
+\begin{algorithm}
+\caption{ \texttt{PriceIsRightQuery($p$,$n$,$L$,$R$)} }
+\label{alg:priceIsRight}
+\begin{algorithmic}
+\State Given input interval $[L,R]$, sorted positive points $p_i$, sorted negative points $n_i$
+\State Running sum $S = 0$
+\For{ $i = 1$ to initial size of $|p| + |n|$} 
+\State Find lowest magnitude candidates:
+\State $L_{i+1} = \frac{S + n_1}{i+1}$
+\State $R_{i+1} = \frac{S + p_1}{i+1}$
+\If{$L_{i+1}<L$ and $R_{i+1} > R$}
+\State Return false 
+\State Both new points will be too large.
+\EndIf
+\State Find max values to stay within boundaries:  
+\State $minL = (i+1)L - S$
+\State $maxR = (i+1)R - S$
+\State Search for largest legal candidates
+\State $LC = \min_j n_j | n_j \geq minL$
+\State $RC = \max_j p_j | p_j \leq maxR$
+\If $|LC - minL | \leq |RC - R|$
+\State $x_i \leftarrow n_{i(l)}$
+\State $n   \leftarrow n \setminus n_{i(l)}$ 
+\Else
+\State $x_i \leftarrow p_{i(r)}$
+\State $p   \leftarrow p \setminus n_{i(r)}$ 
+\EndIf
+\State $S \leftarrow S + x_i$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+With the \texttt{PriceIsRightQuery($p$,$n$,$L$,$R$)} algorithm in hand, we performed a modified version of binary search to minimize the span, $\diameter = |R-L|$, required by the algorithm.  By normalizing our inputs, we know that all of our positive and negative elements are in $[-1,1]$.  Thus, $\diameter \leq 2$.  We then select a number of slices $K$, and turn our optimizing problem over $L$ and $R$ into a one dimensional function:
+
+\begin{align*}
+PQ(L,R) &= \texttt{PriceIsRightQuery}(p,n,L,R) \\
+f(\diameter) &= \min_{0 \leq i \leq K} PQ(-\diameter+i*\frac{\diameter}{K},i*\frac{\diameter}{K} ) \\
+\end{align*}
+
+Clearly when $i=0$, the arguments to $PQ$ are $(-\diameter,0)$, while when $i=K$ they are $(0,\diameter)$.  This binary search finds a minimum span no more than $1+\frac{2}{K}$ times the smallest span into which we can fit a \texttt{PriceIsRightQuery}.
+
+\subsection{Staircase Heuristic} \label{subs:Staircase}
+
+Once we constrain ourselves to placing positive and negative elements in sorted order (i.e. before placing the third smallest positive element, the secondsmallest must be placed), the solution space shrinks.  We define with $J$ the number of placed positives and $K$ the number of placed negatives. For any ordered pair $(J,K)$ there will be a current center of mass:
+
+\begin{align*} 
+C(J,K) = \frac{\sum_{j=1}^{J} p_j + \sum_{k=1}^{K} n_k }{J+K}
+\end{align*}
+
+\textbf{The Dynamic Program That Almost Was}
+
+It would be straightforward to use a dynamic program and this matrix $C(J,K)$ to answer queries of the sort: For a given lower bound on $L$, what is the minimax value of $R$ we must pass through while placing all of our $p$ and $n$ elements?
+
+The recurrence is $R(j,k) = max( C(j,k), min( R(j-1,k), R(j,k-1) ) )$, the memoization table is of size $|p||n|$ and we have to ask this query once for each possible negative value of $C(j,k)$ which is $O(|p||n|)$ for a grand total running time of $O(|p|^2 |n|^2)$ which dominates the sorting time required for any sorted algorithm of $O(|p| \log |p| + |n| \log |n|)$.  Fortunately, this slow dynamic programming solution inspired the much faster staircase heuristic.
+
+\textbf{A Staircase}
+
+If we view a table of $C(i,j)$ as a matrix, its upper left entry is $0$, its lower right entry is $0$.  By lemma \ref{lem:staircaseOrdering}, we know that each row's entries increase as we move to the right, and each columns's entries decrease as we go from top to bottom.  Any path in this chart from the upper left corner to the lower right corner that travels exactly one box right or down at a time correlates to a legal placement ordering of our masses.  We will call such a path a staircase. The highest value of $C(i,j)$ encountered on this staircase is $R$, and the lowest $L$.  
+
+In each row, there is a single lowest valued positive entry, and it occurs immediately after the single highest valued negative entry.  Similarly for columns, the lowest positive entry is before the highest negative entry.  Our algorithm starts with the staircase that includes the lowest valued positive entry of each row and column.  Since this staircase is never negative, its span is just its associated $R$ value.
+
+Our algorithm progresses by removing the highest valued $R$ from the staircase, located at $C(i,j)$ and inserting the negative element $C(i-1,j+1)$ in its place so that the staircase remains connected.  Now we update the $L$ value for the staircase to $min(L,C(i-1,j+1) )$, and update $R$ to the new highest valued positive member of the staircase. We note the span each time (and record the best to return), and stop when there are no positive elements left in the staircase.  Our initial sort took $O( (|p|+|n|) \log ((|p|+|n| )$ operations, and each of our $O(|n|+|p|)$ updates takes $O(1)$ operations.
+
+Generating the initial staircase is trivial. Since $C(0,1)$ has to be negative, $C(1,0)$ is the first element and our starting location.  When we are at positive $C(i,j)$ we can either add a negative element and get to $C(i,j+1)$ or add a positive element and wind up at $C(i+1,j)$. We do the first whenever $C(i,j+1) \geq 0$, and the second otherwise. This required $O(|p|+ |n|)$ operations.
+
+\begin{thm}  \label{thm:staircaseIsOpt}
+The staircase heuristic yields the smallest possible span of all sorted algorithms.
+\end{thm}
+
+This requires some steps.
+
+\subsubsection{Proof of Staircase Optimality}
+
+We need a few lemmas to prove theorem \ref{thm:staircaseIsOpt}.
+
+\begin{lem} \label{lem:staircaseOrdering}
+$\forall_{i,j,k>1} C(i,j+k) \leq C(i,j)$
+$\forall_{i,j,k>1} C(i+k,j) \geq C(i,j)$
+\end{lem}
+
+\begin{proof}
+From the definition of $C(j,k)$ we get:
+
+\begin{align*}
+C(i,j+k) &\leq C(i,j) \\
+\frac{\sum_{a=1}^{i} p_a + \sum_{b=1}^{j+k} n_b }{i+j+k} &\leq \frac{\sum_{a=1}^{i} p_a + \sum_{b=1}^{j} n_b }{i+j} \\
+(i+j)\sum_{b=j+1}^{k} n_b &\leq k(\sum_{a=1}^{i} p_a + \sum_{b=1}^{j} n_b) \\
+\sum_{b=j+1}^{k} n_b &\leq k n_{j+1} \\
+\forall_a n_{j+1} \leq p_a &\rightarrow (i) n_{j+1} \leq \sum_{a=1}^{i} p_a \\
+\forall_{b\leq j} n_{j+1} \leq n_b &\rightarrow (j) n_{j+1} \leq \sum_{b=1}^{j} n_b \\
+k(i+j)n_{j+1} &\leq k(\sum_{a=1}^{i} p_a + \sum_{b=1}^{j} n_b) \\  
+(i+j)\sum_{b=j+1}^{k} n_b  &\leq k(\sum_{a=1}^{i} p_a + \sum_{b=1}^{j} n_b) \\  
+\end{align*}
+
+A similar argument works for the other relation.
+\end{proof}
+
+Because we can only add masses one at a time:
+
+\begin{lem} \label{lem:staircaseNeighborRestriction}
+The predecessor of $C(i,j)$ must be either $C(i-1,j)$ or $C(i,j-1)$.  Its successor must be either $C(i+1,j)$ or $C(i,j+1)$.
+\end{lem}
+
+\begin{lem}
+If $C(i,j)$ is on our initial staircase, $C(i-1,j+1)$ must be negative.
+\end{lem}
+
+\begin{proof}
+$C(i,j)$'s predecessor in our initial staircase is either $C(i-1,j)$ or $C(i,j-1)$.  
+
+\textbf{Predecessor is $C(i-1,j)$:} By construction, we only would go from $C(i-1,j)$ to $C(i,j)$ if $C(i-1,j+1) < 0$.
+
+\textbf{Predecessor is $C(i,j-1)$:} The predecessor of this predecessor is either $C(i-1,j-1)$ or $C(i,j-2)$, since the first would imply $C(i-1,j) < 0$ (by construction) and thus $C(i-1,j+1) < C(i-1,j) < 0$, (from lemma \ref{lem:staircaseOrdering}), the only problematic case is $C(i,j-2)$.  Continuing in this vein for $k>0$, the first predecessor of the form $C(i-1,j-k)$ implies $C(i-1,j-k+1) < 0$ and thus $C(i-1,j+1) < C(i-1,j-k+1) < 0$. Such a predecessor must exist since there is an entry in each row and $C(i,0) \geq 0$.
+\end{proof}
+
+\begin{lem} \label{lem:staircaseDiagonal}
+In order to remove the highest valued $C(i,j)$ from the staircase, the negative element $C(i-1,j+1)$ must be added to it.
+\end{lem}
+
+\begin{proof}
+Combining lemma \ref{lem:staircaseOrdering}, with the knowledge that $C(i,j)$ is the maximum element in the staircase, we can say that $C(i+1,j) > C(i,j)$ and so would be removed before $C(i,j)$, similarly $C(i,j-1) > C(i,j)$ and would also already be removed.  Since the staircase can only consist of adjacent neighbors, $C(i,j)$ occurs in the chain between its only legal neighbors: $C(i-1,j)$ and $C(i,j+1)$.  The only other element adjacent to both of these is $C(i-1,j+1)$, which would have to be added to the staircase to allow for removal of $C(i,j)$.
+\end{proof}
+
+\begin{lem} \label{lem:initialStaircaseBest}
+The initial staircase has the smallest span of any mass ordering with $L = 0$.
+\end{lem}
+
+\begin{proof}
+By contradiction we assume that a wholly positive staircase exists whose maximum element $R$ is strictly less than the max element $C(i,j)$ in our initial staircase.
+
+The predecessor of $C(i,j)$ is either $C(i-1,j)$ or $C(i,j-1)$.  But $C(i,j-1) < C(i,j)$ by lemma \ref{lem:staircaseOrdering}, contradicting the assertion that $C(i,j)$ is our maximum element.  
+
+This leaves us with $C(i-1,j)$ as predecessor.  From lemma \ref{lem:staircaseDiagonal}, we know that $C(i-1,j+1)$ is negative. This means all wholly positive paths cannot enter row $j$ with fewer than $i$ positive elements already placed.  Since their entry point, $C(i+k,j) \geq C(i,j) \geq R$ for $k \geq 0$, we have a contradiction.
+\end{proof}
+
+We can now prove theorem \ref{thm:staircaseIsOpt}.
+
+\begin{proof}
+By induction. At each step $k$ our $L_k$ is the maximum (i.e. minimum magnitude) negative entry that any staircase must hit for the $R_k$ we allow.  The beginning of the recursion is easy: $L=0$ is the maximum $L$ can be, ever.  
+
+At a step in our algorithm, we seek a lower $R_k$ by removing the highest $C(i,j)$ in our sequence.  To do this, by \ref{lem:staircaseDiagonal}, we replace it with negative element, $C(i-1,j+1)$. If this new negative element is more positive than $L_{k-1}$, then the induction holds trivially.  If not, then $L_k = C(i-1,j+1)$.  
+
+For contradiction, we assume that a staircase exists with $R = R_k$ and $L > L_k$. To improve our staircase, we would have to remove $C(i-1,j+1)$.  The chain of reasoning used in \ref{lem:staircaseDiagonal} leads us to conclude that the only way to do this is by adding in $C(i,j)$ which would give a path with $R = R_{k-1} > R_k$, a contradiction.
+
+Since at each step, we find the max $L$ for each candidate $R$ value and record the smallest span found, we find the smallest span.
+\end{proof}
+
+\section{Numerical Testing of Heuristics}
+
+In the spirit of testing our work, we developed and tested 6 heuristics that gave us solutions to the waiter problem and also a heuristic giving a lower bound on the width of the optimum solution.  To test these heuristics against an optimum solution, we wrote a branch and bound exact solver for the waiter problem that ran in exponential time.
+
+\subsection{Branch and Bound Exact Solver}
+
+The waiter problem can be solved in exponential time with a simple to write recursive function which tests all possible candidates.  By modifying this slightly to record the smallest width of a complete traversal thus far discovered, we can prune many unnecessary branch traversals and significantly improve running time.  This branch and bound routine is \texttt{BBWaiter}.  Note that $\Delta$ must be passed by reference (or be global) so that the recursive function calls can modify it for all calls, not just their descendants.
+
+\begin{algorithm}
+\caption{ \texttt{BBWaiter(input,$L$,$R$,sum,$N$,$\Delta$)} }
+\label{alg:bbExhaustive}
+\begin{algorithmic}
+\For{ $i$ = 1 to $|$input$|$ }
+  \State newL = L;
+  \State newR = R;
+  \State newCenter = (sum+input[i])/($N$+1);
+  \If{newCenter $< L$} 
+  \State newL = newCenter;
+  \EndIf
+  \If{ newCenter $> R$ }
+  \State newR = newCenter
+  \EndIf
+  \If{ newR $-$ newL $\geq \Delta$}
+  \State Continue
+  \EndIf
+  \If{ $|$input$| > 1$}
+  \State bestWidth[i] = BBWaiter(input $\setminus$ input[i], newL, newR, sum+x, $N+1$,$\Delta$);
+  \Else
+  \State bestWidth[i] = newR $-$ newL
+  \EndIf
+  \If{ $|$input$| = 1$ AND newR $-$ newL $< \Delta$}
+  \State $\Delta = $ newR $-$ newL
+  \EndIf
+\EndFor
+\State \Return $\min_i {\textrm{bestWidth[i]}}$  
+\end{algorithmic}
+\end{algorithm}
+
+\FloatBarrier
+\subsection{Brief Heuristic Descriptions}
+
+In the following discussion, ``the interval'' will be used as shorthand to mean the interval containing the center of mass $C_i$ for all $i$ less than or equal to the current step of the algorithm. ``CoM'' will also be used regularly to mean the center of mass at the curent step of the algorithm.
+
+Almost all of our heuristics start by separating our inputs into positive and negative lists and sorting those lists by absolute value.  When either positive or negative elements are placed, they are placed in order of increasing magnitude. We will note algorithms which do not do this by calling them unsorted.
+
+\begin{enumerate}
+\item \texttt{GreedyCentroid}
+  This algorithm belongs to our family of sorted algorithms.  At each step, it places the smallest magnitude remaining positive or negative candidate that minimizes the absolute value of the next step's center of mass. 
+
+\item \texttt{PositvesNegatives}
+  This sorted algorithm seeks to keep the center of mass positive by placing positive elements in order of increasing magnitude and only placing the next largest magnitude negative element when its inclusion will not make the center of mass negative.
+
+This is repeated for keeping the CoM negative and the smaller interval order is returned.
+
+\item \texttt{PriceIsRight}
+The price is right is an unsorted algorithm that optimizes the interval width of the yes/no question: can applying this heuristic keep the center of mass inside of a given input interval $[L,R]$?
+
+At each step the price is right heuristic places the mass that moves the CoM closest to one of its endpoints without going past it.  See its writeup in section \ref{subs:PIR} for more details.
+
+\item \texttt{SlowGrow}
+This greedy, sorted algorithm seeks to increase the width of the interval containing the CoM by the smallest amount each step.  It does so by placing the smallest positive or negative element if doing so would not increase the width of the interval, or selecting the element that increases the interval width by the smallest amount. 
+
+\item \texttt{SortedMidpoint}
+This is very similar to SlowGrow.  It seeks to independently minimize the values of $|L|$ and $|R|$ by placing the smallest positive or negative element if the resultant CoM is within the curent interval, or if they both would result in increasing the width of the interval, placing the point whose resultant center of mass has the smallest magnitude.
+
+\item \texttt{SortedPoints}
+This very naive heuristic places points in order of increasing magnitude.  This heuristic performs poorly on the case shown in section \ref{subs:naiveCounter} and is expected to have worst case behavior no better than an $O(\sqrt{n})$ times the width of the optimal solution.
+
+\item \texttt{Staircase} The best possible algorithm that uses sorted placements. For each relevant $R$, it finds the path with minimum $|L|$ whose CoM is never less than $L$.   See its writeup in section \ref{subs:Staircase}.
+
+\item \texttt{Tentpole}
+This sorted heuristic seeks to keep us from making a bad decision that will allow the center of mass to grow larger than it has to.  At each step it places masses of the same sign (positive or negative) until the magnitude of the running sum of masses placed plus the next candidate of the same sign is greater than the magnitude of the candidate of the opposite sign.  Once this happens, the opposite sign candidate is placed and this becomes the active sign.
+
+
+\item \texttt{TentpoleLB}
+
+This is not a solver algorithm, it calculates the absolute lower bound for $|R-L|$ defined in theorem \ref{thm:tentpoleBound} by determining the tentpole ordering and then finding the maximum of the two quantities $\frac{p_i}{\pi^+_i},\frac{|n_i|}{\pi^-_i}$, which is an occasionally tight lower bound on optimum $|R-L|$.
+
+\end{enumerate}
+
+We also reassure ourselves that the independent bounds on $|L|$ and $|R|$ that we find using the tentpole ordering are in fact lower bounds no smaller than $\frac12$ of the width of the optimum solution.
+
+\subsection{Numerical Results}
+
+We generated a few million sets of input masses.  Our input mass sets had a fixed length of 10, an average of 0, and a maximum magnitude of $1$.  For each input set, we found the optimum solution of smallest width using \texttt{BBWaiter} and then also found the heuristic solution using each of our methods.  The indices of worst cases were flagged for later worst case analysis. 
+
+
+\begin{table*} \centering
+\begin{tabular}{|l|lllll|}
+\hline
+Heuristic & Min & Max & Mean & Std & Runs \\ \hline
+GreedyCentroid& 1& 1.98& 1.23& 0.17& 1000000\\ 
+PositivesNegatives& 1& 4.71& 1.39& 0.29& 1000000\\ 
+PriceIsRight& 1& 1.34& 1.02& 0.03& 1000000\\ 
+SlowGrow& 1& 1.63& 1.08& 0.09& 1000000\\ 
+SortedMidpoint& 1& 1.63& 1.08& 0.09& 1000000\\ 
+SortedPoints& 1& 3.13& 1.65& 0.34& 1000000\\ 
+Staircase& 1& 1.38& 1.03& 0.05& 1000000\\ 
+Tentpole& 1& 1.98& 1.24& 0.18& 1000000\\ \hline
+TentpoleLB& 0.55& 1& 0.89& 0.08& 1000000\\ 
+\hline
+\end{tabular}
+\caption{Algorithm performance on 10 input points drawn from a Normal(0,1) distribution and then fixed using the transformation: $y_i \rightarrow \frac{y_i - \bar{y} }{\max(|y_i| - \bar{y}) }$ }
+\label{table:uniformResults}
+\end{table*}
+
+
+\begin{table*} \centering
+\begin{tabular}{|l|cccccccc|c|}
+\hline
+Worst Case From $\downarrow$
+ & \begin{sideways} GreedyCentroid \end{sideways}
+ & \begin{sideways} PositivesNegatives \end{sideways}
+ & \begin{sideways} PriceIsRight \end{sideways}
+ & \begin{sideways} SlowGrow \end{sideways}
+ & \begin{sideways} SortedMidpoint \end{sideways}
+ & \begin{sideways} SortedPoints \end{sideways}
+ & \begin{sideways} Staircase \end{sideways}
+ & \begin{sideways} Tentpole \end{sideways}
+ & \begin{sideways} TentpoleLB \end{sideways}
+ \\ \hline
+GreedyCentroid & \textbf{1.98} & 1.98 & 1.05 & 1.09 & 1.09 & 1.99 & 1 & 1.77 & 0.99\\ 
+PositivesNegatives & 1.38 & \textbf{4.71} & 1 & 1 & 1 & 1 & 1 & 1.09 & 1\\ 
+PriceIsRight & 1.33 & 1.33 & \textbf{1.34} & 1.29 & 1.29 & 2.26 & 1.29 & 1.33 & 0.98\\ 
+SlowGrow & 1.55 & 1.55 & 1 & \textbf{1.63} & 1.63 & 1.43 & 1 & 1.63 & 1\\ 
+SortedMidpoint & 1.55 & 1.55 & 1 & 1.63 & \textbf{1.63} & 1.43 & 1 & 1.63 & 1\\ 
+SortedPoints & 1 & 1.64 & 1 & 1 & 1 & \textbf{3.13} & 1 & 1 & 0.91 \\ 
+Staircase & 1.39 & 1.39 & 1 & 1.39 & 1.39 & 1.53 & \textbf{1.38} & 1.39 & 0.92\\ 
+Tentpole & 1.86 & 1.97 & 1 & 1.02 & 1.02 & 1.98 & 1 &  \textbf{1.98} &0.98\\ \hline
+TentpoleLB & 1.53 & 1.53 & 1.01 & 1.01 & 1.01 & 1.79 & 1.01 & 1.31 & \textbf{1}\\ 
+\hline 
+ \end{tabular}
+  \caption{Each row represents the worst scenario observered for a specific algorithm.  Columns show performance of each algorithm on those inputs.}
+  \label{table:worstCases}
+\end{table*}
+
+For each algorithm, we noted which inputs it struggled with the most.  Since all algorithms were run on the same inputs, we summarize in table \ref{table:worstCases} how algorithms solved each other's toughest cases.  Though \texttt{PriceIsRight} outperforms all other algorithms on their own worst cases, \texttt{SlowGrow}, \texttt{SortedMidpoint} and \texttt{Staircase} outperform \texttt{PriceIsRight} on its own worst case scenario, and \texttt{Staircase} outperforms it on \texttt{GreedyCentroid}'s worst case.
+
+Since \texttt{Staircase} was analytically shown to dominate \texttt{Tentpole} and \texttt{SlowGrow}, it is nice to see the numbers bear this out.  The numbers also allow us to abandon the three algorithms whose performance could be arbitrarially bad: \texttt{GreedyCentroid}, \texttt{PositivesNegatives} and \texttt{SortedPoints}.  As the running time of all algorithms that are not \texttt{PriceIsRight} is $O(n \log n)$, these badly performing algorithms have no competitive advantage.  
+
+Since \texttt{Tentpole} was soundly beaten by the remaining algorithms, it is likely that a more careful analysis will show a tighter bound on \texttt{Staircase} than the 2.7 it inherited by dominating all sorted algorithms, including \texttt{Tentpole}.
+
+\section{Conclusion}
+
+In this paper we introduced a new, NP-complete, balanced packing problem: the waiter problem.  Our initial results in one dimension were promising.  We devised a number of simple heuristics based on sorting.  For one of them, \texttt{Tentpole}, we were able to prove that it was a 2.7 factor approximation algorithm.  Initial experimental tests showed that another of our proposed algorithms, \texttt{PriceIsRight} outperforms the other heuristics on a large number of test cases.
+
+We then devised a \texttt{Staircase} algorithm which is the best possible sorted algorithm.  This algorithm's dominance over the earlier sorted algorithms was experimentally verfied, and the non-sorted \texttt{PriceIsRight} algorithm was shown to occasionally outperform it.
+
+Though we plan to extend the work to two dimensions, we note that the real world applications to airplane loading are well served with a one dimensional approximation.  
+

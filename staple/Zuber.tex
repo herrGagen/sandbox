@@ -1,0 +1,90 @@
+\documentclass[11pt]{article}
+
+\usepackage{pdfpages}
+\usepackage{mystyle}
+\pagestyle{plain}
+\includepdfset{pagecommand={\thispagestyle{plain}}}
+
+\title{Probing the Knowable Unknown}
+\author{James Zuber}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+
+\twocolumn[
+\centering
+\section*{Abstract}
+]
+Three problems in discrete optimization are consid-
+ered and solved to varying degrees using novel algo-
+rithms. Worst case behavior experiments were run
+in all chapters to show that our algorithms are prac-
+tical and to verify correctness.
+Our first rearrangement problem of passengers
+seated on an airplane is shown to be NP-hard in
+general. A simplified case is solved optimally using
+a greedy algorithm. The same algorithm is used as
+part of a two phase approach to find a 2-factor ap-
+proximation for a slightly more complex version of
+the problem.
+Our second chapter improves on a recently published
+approach to DNA copy number analysis. We first
+show that the greedy algorithm published is no bet-
+ter than a approximation and then devise both a
+dynamic programming PTAS and an integer pro-
+gramming formulation for their model. These, along
+with some obvious heuristics, were experimentally
+compared to the published approach and performed
+favorably.
+We finish with another rearrangement problem with
+applications to dynamic load balancing. For this
+NP-hard problem, we devise a lower bound mea-
+suring algorithm, a novel 2-factor heuristic and an
+experimentally promising heuristic. To demonstrate
+ease of implementation and algorithm viability, we
+experimentally compared the solution quality of our
+algorithms to some suggested heuristics.
+
+\twocolumn[
+\centering
+\section*{Introduction}
+]
+
+This document is divided into 3 self-contained chapters.  For the three combinatorial optimization problems considered, we define and analyze the problme space and objective, formulate candidate algorithms and then subject those algorithms to theoretical and experimental analysis.
+
+The recurring theme of using experimental approaches permeates all of the chapters.  This enforces a few things in our algorithms. {\it First}, they all must be simple enough to be implemented in code by a technically savvy reader.  Even the most complex algorithm contained herein (a dyanamic programming based PTAS) has easily implemented subfunctions that are described at or near the pseudocode level.  {\it Second}, they must have reasonable running times.  If an algorithm takes more than a second or two to crunch an instance with a dozen input points, we will not be able to run it enough times to get meaningful statistics on its performance.  On modern computers, this translates to algorithms of $O(n^8)$ or higher being considered completely unwieldy.
+
+The advantages of using working under such constraints is that we can use the power of experiments while formulating our ideas. Preliminary results of bad case behaviors of algorithms queued us when to reformulate some algorithms and quickly abandon other unfruitful approaches. Another advantage of an insistence on quick algorithms is that they enable general metaheuristic optimization techniques. These techniques evaluate their scoring algorithms many times and do not bound their performance, but in practice do a very good job of exploring multidimensional input spaces.
+
+The first chapter asks the question: how many 2 element exchanges are required to order a random permutation of objects so that all objects of the same class find themselves in a continuous block. The problem we focus on is similar to Djikstra’s Dutch Flag problem, but his 3 classes of unrestricted sizes with a known final configuration are replaced by our unlimited number of classes with restricted sizes and an unknown final configuration.
+
+Our second chapter answers an algorithmic question in DNA copynumber analysis brought to our attention by a collaborator at Cold Spring Harbor Laboratory. We analyzed the worst case behavior of his simple greedy algorithm and then formulated alternative approaches based on integer programming and the problem’s underlying structural similarity to interval graphs.  These approaches were tested experimentally and compared to the original geedy formulation in order to provide a practical tool for DNA copy number analysis.
+
+The final chapter is another permutation problem dubbed the 1D Waiter Problem.  It is a packing problem where the final position of all objects is known and the challenge is to place them all in such an order that the center of mass as each item is placed is contained in a small interval.  This problem is a generalization of the well esxplored packing problem where only the final position of the center of mass is measured, and raises some new challenges.  
+
+\includepdf[pages=-]{airplane.pdf}
+\includepdf[pages=-]{intervals.pdf}
+\includepdf[pages=-]{waiter1D.pdf}
+
+\twocolumn[
+\centering
+\section*{Conclusion}
+]
+
+We were able to tackle three problems in discrete optimization from an experimental algorithmics standpoints.  
+
+Our first chapter provided an example of a simple problem to state that manages to be deceptively difficult to solve. The class of rearrangement problems with unknown final configurations has some real world applications to which we hope a generalization of our two step approach will be applied.  
+
+Experimentally, this problem was very easy to approach because the optimal solution could be bounded trivially.  Those experiments quickly lead to an unexpected result: our results showed that we had ignored second order behaviors when determining our structure.  The algorithm we had developed was not, as we had hoped, an optimal algorithm. Having an impartial, emotionless reviewer checking our claims helped to strengthen them.
+
+In the genetic interval chapter, computer simulations of bad greedy cases illustrated the problem’s behavior and informed our future intuitions. Simulations quickly teased out that the greedy approach’s worst case score was no better than $\frac34$ of opt, but that was their most trivial application.
+
+There were two unexpected theoretical breakthroughs that we would not have spotted without performing experiments. Implementation of an efficient method to score partially covered defects caused us to formulate the concept of primitives. Without primitives, we had no integer programming formulation. The structure of the experimentally generated bad non-overlapping (i.e. 1-depth DP) cases also allowed us to answer no to the question of whether our linear progamming relaxation was total unimodular and thus trivial.
+
+Our final chapter, the waiter problem, was structured as an algorithmic battle royale. Many reasonable approaches were brought to bear on the problem and their behaviors compared.  The most interesting experimental outcome from this chapter was that it showed a place for the oft maligned black-box genetic algorithm optimization techniques in an OR setting.  Instead of setting up a fitness function and letting the genetic algorithm do all of the heavy lifting, we let a GA take our suite of algorithm through their paces.  The hybrid approach gave us more consistently challenging cases than the purely random case generation it replaced.
+
+We have demonstrated experimentally guided algorithm development for three problems in combinatorial optimization.  Without the insights (especially the serendipitous) provided by analyzing experimental outputs we would have not been able to so thoroughly probe and document the complex bahaviors of our problems.
+
+\end{document}

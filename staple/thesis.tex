@@ -1,0 +1,100 @@
+\documentclass[phd,tbottom,tnosig]{Athesis}
+
+\usepackage{mystyle}
+
+\usepackage{multirow}
+\usepackage{afterpage}
+\usepackage{hhline}
+\usepackage{url}
+%\usepackage{hyperref} % see the file hyperref.cfg for options
+%\usepackage{footmisc} % provides \footref and \mpfootnotemark commands
+\usepackage{xspace}
+\usepackage[numbers,sort&compress]{natbib}
+
+% Latin abbreviations
+\providecommand*{\eg}{\emph{e.\,g.}\xspace}%
+\providecommand*{\ie}{\emph{i.\,e.}\xspace}%
+
+\hyphenation{put words here which LaTeX does not hy-phen-ate pro-per-ly}
+
+\author{James Zuber}%
+\title{Probing the Knowable Unknown}%
+
+\program{Applied Mathematics and Statistics}%
+
+\director{Joseph S. B. Mitchell}{Distinguished Professor, Department of Applied Mathematics and Statistics}%
+\chairman{Esther Arkin}{Professor, Department of Applied Mathematics and Statistics}%
+\fstmember{Steven Skiena}{Distinguished Teaching Professor, Department of Computer Science}%
+\sndmember{Jie Gao}{Associate Professor, Department of Computer Science}%
+\dean{Charles Taber}%
+
+\begin{document}
+
+\singlespacing %
+\pagenumbering{roman} %
+
+%\maketitle %
+\makeapproval %
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\begin{dedication}
+  To JC.
+\end{dedication}
+
+\tableofcontents %
+%\listoffigures %
+%\listoftables %
+
+\pagestyle{thesis}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\pagenumbering{arabic}
+
+\chapter{Airplane Seating}{
+
+\begin{centering}
+\par{\large \bf Summary:}
+
+\end{centering}
+
+\par{We imagine passengers on an airplane being asked to swap seats so that a couple or family can sit together. This paper focuses on minimizing the number of passenger exchanges to make all families on a plane happy. We give a hardness proof for the general case of unbounded, heterogeneous family sizes and constant factor approximation heuristics for smaller families on idealized planes.} 
+}
+\input{airplaneBody}
+
+\chapter{Genomic Interval Algorithm Analysis}{
+
+
+\begin{centering}
+\par{\large \bf Summary:}
+
+\end{centering}
+
+\par{Using a specific mathematical model, we treat DNA copy number analysis as an optimization problem. We devise a polynomaial time approximation scheme, two greedy heuristics and a binary programming model to solve the model exactly. These algorithms are analyzed for correctness and then their performance is tested using synthetic data.} 
+}
+\input{intervalsBody}
+
+\chapter{The Waiter Problem in One Dimension}{
+\begin{centering}
+\par{\it James Zuber}
+
+\par{\large \bf Summary:}
+
+\end{centering}
+
+\par{The waiter problem is a discrete packing problem where the objective is to contain the partial centers of mass of objects placed on a line within a small interval. We introduce the problem, prove its NP completeness, and present both a bound on performance and a 2.7 factor approximation heuristic to solve the problem.}
+}
+
+\input{waiter1DBody}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{unsrtnat}
+\bibliography{airplanePapers,intervalPapers,waiterPapers}
+
+\end{document}
