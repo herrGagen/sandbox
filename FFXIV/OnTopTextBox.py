@@ -24,7 +24,7 @@ class OnTopTextBox(threading.Thread):
         label.config(anchor=Tkinter.NW)
         label.config(wraplength = 280)
         label.pack()
-
+        self.root.wm_attributes("-topmost", 1)
         self.root.mainloop()
 
     def append(self, add, delim ='\t'):
