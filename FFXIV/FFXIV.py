@@ -1,12 +1,29 @@
 import win32con
 import win32gui
+import win32api
 import win32process
+import time
 
 class FFXIV:
 
     def __init__(self):
         self.pid = self.find_pid()
         self.device_context = win32gui.GetWindowDC(self.pid)
+
+    @staticmethod
+    def numpad(x):
+        return {
+            '1': win32con.VK_NUMPAD1,
+            '2': win32con.VK_NUMPAD2,
+            '3': win32con.VK_NUMPAD3,
+            '4': win32con.VK_NUMPAD4,
+            '5': win32con.VK_NUMPAD5,
+            '6': win32con.VK_NUMPAD6,
+            '7': win32con.VK_NUMPAD7,
+            '8': win32con.VK_NUMPAD8,
+            '9': win32con.VK_NUMPAD9,
+            '0': win32con.VK_NUMPAD0
+        }.get(x,[])
 
     @staticmethod
     def find_pid(name = "FINAL FANTASY XIV"):
@@ -36,10 +53,11 @@ class FFXIV:
         return {
             '^': win32con.VK_CONTROL,
             '!': win32con.VK_MENU,
-            '+': win32con.VK_SHIFT
+            '+': win32con.VK_SHIFT,
+            '#': '#'
         }.get(x,[])
 
-    def send_key(self, key, hold_secs = 0.1):
+    def send_key(self, key = win32con.VK_NUMPAD0, hold_secs = 0.1):
         """
         Sends letters and numbers to ff handle.
 
@@ -48,37 +66,39 @@ class FFXIV:
          ! alt
          + shift
 
+         Can send numpad digits using #<digit>
+
         :param key:
         Alphanumeric key to press.  Can also be modified i.e. '^a', '!2'
 
         :param hold_secs:
         Seconds to hold key before releasing. Default 0.1
         """
-        if key.__len__() > 1:
+        if key.__len__() == 2:
             mod = FFXIV._get_modifier(key[0])
-            code = key[1]
-        else:
+            code = ord(key[1])
+        elif key.__len__() == 1:
             mod = []
-            code = key[0]
-        assert code.isalnum()
+            code = ord(key[0])
+        else:
+            code = key
+
+        if mod == '#':
+            mod = []
+            code = FFXIV.numpad(key[1])
 
         if mod != []:
-            win32api.SendMessage(ff_handle, win32con.WM_KEYDOWN, mod, 0)
+            win32api.SendMessage(self.pid, win32con.WM_KEYDOWN, mod, 0)
 
-        win32api.SendMessage(ff_handle, win32con.WM_KEYDOWN, ord(code), 0)
+        win32api.SendMessage(self.pid, win32con.WM_KEYDOWN, code, 0)
         time.sleep(hold_secs)
-        win32api.SendMessage(ff_handle, win32con.WM_KEYUP, ord(code), 0)
+        win32api.SendMessage(self.pid, win32con.WM_KEYUP, code, 0)
 
         if mod != []:
-            win32api.SendMessage(ff_handle, win32con.WM_KEYUP, mod, 0)
+            win32api.SendMessage(self.pid, win32con.WM_KEYUP, mod, 0)
 
 
 if __name__ == '__main__':
-    import win32api
-    import time
-    import win32com
-    import win32com.client
-    shell = win32com.client.Dispatch("WScript.Shell")
 
     ff = FFXIV()
     ff_handle = ff.find_pid()
@@ -86,10 +106,13 @@ if __name__ == '__main__':
 
     time.sleep(4)
     for x in range(1,10):
-        print("Pressing 1")
-        ff.send_key('1',0.2)
+        print("Pressing 0")
+        ff.send_key('0',0.2)
         time.sleep(4)
-        print("Pressing Ctrl+1")
-        ff.send_key('^1',0.2)
+        print("Pressing Ctrl+0")
+        ff.send_key('^0',0.2)
+        time.sleep(4)
+        print("Pressing Numpad 0")
+        ff.send_key('#0',0.2)
         time.sleep(4)
 

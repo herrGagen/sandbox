@@ -18,9 +18,8 @@ class CraftReader:
     THRESH = 500
     """ Threshold for pixel sums being white"""
 
-    @property
-    def text_y(self):
-        return 291
+    text_y = 291
+
     norm_pix = (88, 104, 108, 136)
     good_pix = (94, 101, 120, 129)
     exel_pix = (82, 90, 128, 141)
@@ -35,8 +34,6 @@ class CraftReader:
         self.open_left = 280
         self.open_right = 318
         self.open_y = 208
-        self.help_line = "F1 to increment counter, F4 to close"
-        self.tb = OnTopTextBox(self.help_line)
 
     @property
     def is_crafting(self):
@@ -99,24 +96,4 @@ class CraftReader:
         qual_frac = (qual_r - self.left) / width if qual_r > 0 else 1
         return (prog_frac, qual_frac)
 
-    def update_label(self):
-        if self.is_crafting:
-            (p,q) = self.progress
-            bars = "%s\n p:%f \t q: %f" %(self.help_line, p , q)
-            cond = "Condition: %s" % self.condition.name
-            self.tb.set_text("%s\n%s" %(bars, cond))
-        else:
-            self.tb.set_text("Not crafting")
-        
-    def close(self):
-        self.tb.destroy()
-
-if __name__=="__main__":
-    from hotkey import HotkeyHandler as HH
-    import time
-
-    cr = CraftReader()
-    for x in range(1,1000):
-        cw.update_label()
-        time.sleep(0.5)
 
