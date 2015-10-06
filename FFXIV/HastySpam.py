@@ -10,30 +10,37 @@ manip_cp = 88
 masters_mend_cp = 92
 precise_cp = 18
 
-class MythNugg(Crafter):
+class HastySpam(Crafter):
 
-    def __init__(self, cp = 339, req_synth = 1):
-        Crafter.__init__(self,cp, req_synth)
+    def __init__(self,
+                 cp,
+                 durability,
+                 careful_prog,
+                 total_prog,
+                 num_mark,
+                 stack_goal):
+        Crafter.__init__(self,
+                         cp,
+                         durability,
+                         careful_prog,
+                         total_prog,
+                         num_mark,
+                         stack_goal)
 
     def craft(self):
         self.start_craft()
-        self.use_makers_mark(2)
-        for x in range(0,2):
-            self.use_flawless_synth()
-
-        synths_used = 0
-        if self.req_synth == []:
-            self.req_synth = self.estimate_synth_number()
-            synths_used = 1
+        if(self.mark_turns > 0):
+            self.use_makers_mark(self.mark_turns)
+            for x in range(0,self.mark_turns):
+                self.use_flawless_synth()
 
         self.try_tricks()
         self.use_comfort_zone()
         self.try_tricks()
         self.use_inner_quiet()
-        while(synths_used < self.req_synth
-                and self.is_crafting):
-            remaining_turns = (4 - math.ceil(self.spent_dur/10)) + self.manip_turns
-            if (remaining_turns > self.req_synth - synths_used
+        while(self.is_crafting):
+            remaining_turns = math.ceil((self.total_dur - self.spent_dur)/10) + self.manip_turns
+            if (remaining_turns > self._calc_remaining_synths()
                     and self.quality < 0.95):
                 self._increase_quality()
             else:
@@ -45,7 +52,7 @@ class MythNugg(Crafter):
             enough_dur = (self.spent_dur < 20 or self.manip_turns > 0)
             if(enough_dur == True
                     and self.steady_turns > 0
-                    and self.iq_stacks < 8
+                    and self.iq_stacks < self.stack_goal
                     and self.cp >= precise_cp):
                 self.use_precise_touch()
             else:
@@ -63,10 +70,10 @@ class MythNugg(Crafter):
             self.use_steady_hand_2()
             return
 
-        if self.spent_dur >= 30:
+        if (self.total_dur-self.spent_dur) < 15:
             self._restore_durability()
 
-        if self.iq_stacks >= 8:
+        if self.iq_stacks >= self.stack_goal:
             self._do_last_touch()
             return
 
@@ -74,7 +81,7 @@ class MythNugg(Crafter):
 
     def _restore_durability(self):
         if(self.manip_turns > 0
-                and self.spent_dur > 20
+                and (self.total_dur-self.spent_dur) < 15
                 and self.cp > innovation_cp):
             self.use_innovation()
         elif((self.cp > manip_cp and self.spent_dur < 30)
@@ -155,8 +162,26 @@ class MythNugg(Crafter):
 
 
 if __name__=="__main__":
-    mn = MythNugg()
-    for x in range(0,46):
+    import XMLRecipeReader as xrr
+
+    ## Cloud Mica Whetstone
+    cp = 338
+    durability = 35
+    careful_prog = 205
+    total_prog = 376
+    num_mark = 0
+    stack_goal = 8
+    num_to_craft = 14
+
+    mn = HastySpam(*xrr.get_recipe_from_xml("goldsmithing.xml",
+                                            "cloud mica whetstone"))
+    is_collectible = False
+    for x in range(0,num_to_craft):
         mn.craft()
-        time.sleep(5)
+        if(is_collectible):
+            mn.accept_collectible()
+            time.sleep(4)
+        else:
+            time.sleep(5)
+
 

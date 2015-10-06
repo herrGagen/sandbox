@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
     ff = FFXIV()
     ff_handle = ff.find_pid()
-    print ff_handle, "=>", win32gui.GetWindowText(ff_handle)
+    print(ff_handle, "=>", win32gui.GetWindowText(ff_handle))
 
     time.sleep(4)
     for x in range(1,10):

@@ -10,9 +10,9 @@ class HotkeyHandler:
         byref = ctypes.byref
 
         for id, (vk, modifiers) in HOTKEYS.items ():
-          print "Registering id", id, "for key", vk
+          print("Registering id", id, "for key", vk)
           if not user32.RegisterHotKey (None, id, modifiers, vk):
-            print "Unable to register id", id
+            print("Unable to register id %d" % id)
 
         #
         # Home-grown Windows message loop: does

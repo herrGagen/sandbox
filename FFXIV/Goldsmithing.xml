@@ -1,0 +1,12 @@
+<recipes>
+    ## Cloud Mica Whetstone
+    <cp>338</cp>
+    <recipe>
+        <name>Cloud Mica Whetstone</name>
+        <durability>35</durability>
+        <careful_prog>205</careful_prog>
+        <total_prog>376</total_prog>
+        <num_mark>0</num_mark>
+        <stack_goal>8</stack_goal>
+    </recipe>
+</recipes>
