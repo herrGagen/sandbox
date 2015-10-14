@@ -171,10 +171,10 @@ if __name__=="__main__":
     total_prog = 376
     num_mark = 0
     stack_goal = 8
-    num_to_craft = 14
+    num_to_craft = 60
 
     mn = HastySpam(*xrr.get_recipe_from_xml("goldsmithing.xml",
-                                            "cloud mica whetstone"))
+                                            "Mythrite Nugget"))
     is_collectible = False
     for x in range(0,num_to_craft):
         mn.craft()
