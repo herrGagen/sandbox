@@ -3,13 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="9cceb12e-ecf2-46a3-b693-595a534f39c3" name="Default" comment="">
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Forecasts/.idea/.name" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Carpenter.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Forecasts/DAForecast.py" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Forecasts/.idea/Forecasts.iml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Forecasts/.idea/misc.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Forecasts/.idea/modules.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Forecasts/.idea/vcs.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Forecasts/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Goldsmithing.xml" afterPath="$PROJECT_DIR$/Goldsmithing.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Crafter.py" afterPath="$PROJECT_DIR$/Crafter.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HastySpam.py" afterPath="$PROJECT_DIR$/HastySpam.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -47,8 +48,8 @@
       <file leaf-file-name="Crafter.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Crafter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
+            <state vertical-scroll-proportion="-7.3076925">
+              <caret line="163" column="29" selection-start-line="163" selection-start-column="29" selection-end-line="163" selection-end-column="29" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -59,8 +60,8 @@
       <file leaf-file-name="HastySpam.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/HastySpam.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.71141976">
-              <caret line="182" column="25" selection-start-line="182" selection-start-column="25" selection-end-line="182" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.39967898">
+              <caret line="164" column="16" selection-start-line="164" selection-start-column="14" selection-end-line="164" selection-end-column="16" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -92,7 +93,17 @@
         <entry file="file://$PROJECT_DIR$/Goldsmithing.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="20" column="10" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
+              <caret line="20" column="10" selection-start-line="0" selection-start-column="0" selection-end-line="20" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Carpenter.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Carpenter.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -124,10 +135,11 @@
         <option value="$PROJECT_DIR$/FFXIV.py" />
         <option value="$PROJECT_DIR$/hotkey.py" />
         <option value="$PROJECT_DIR$/OnTopTextBox.py" />
-        <option value="$PROJECT_DIR$/Crafter.py" />
         <option value="$PROJECT_DIR$/XMLRecipeReader.py" />
         <option value="$PROJECT_DIR$/Goldsmithing.xml" />
+        <option value="$PROJECT_DIR$/Carpenter.xml" />
         <option value="$PROJECT_DIR$/HastySpam.py" />
+        <option value="$PROJECT_DIR$/Crafter.py" />
       </list>
     </option>
   </component>
@@ -135,9 +147,8 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="286" />
-    <option name="y" value="50" />
-    <option name="width" value="1345" />
+    <option name="x" value="464" />
+    <option name="width" value="1360" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -164,7 +175,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -185,6 +195,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -431,6 +442,13 @@
       <option name="number" value="Default" />
       <updated>1442147713559</updated>
     </task>
+    <task id="LOCAL-00001" summary="Stable version of crafting bot code. Want to ensure it's in github.">
+      <created>1444794509317</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1444794509317</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -443,16 +461,16 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="286" y="50" width="1345" height="1047" extended-state="0" />
+    <frame x="464" y="0" width="1360" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31116208" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30763417" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32904884" sideWeight="0.49286395" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2665941" sideWeight="0.6238532" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.265506" sideWeight="0.63416475" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44396082" sideWeight="0.36162078" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2665941" sideWeight="0.3761468" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.265506" sideWeight="0.36583522" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24829674" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275649" sideWeight="0.48508945" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -478,6 +496,10 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Stable version of crafting bot code. Want to ensure it's in github." />
+    <option name="LAST_COMMIT_MESSAGE" value="Stable version of crafting bot code. Want to ensure it's in github." />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -502,13 +524,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CraftReader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hotkey.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -870,16 +885,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Crafter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/OnTopTextBox.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -901,15 +906,33 @@
     <entry file="file://$PROJECT_DIR$/Goldsmithing.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="10" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
+          <caret line="20" column="10" selection-start-line="0" selection-start-column="0" selection-end-line="20" selection-end-column="10" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Carpenter.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Crafter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.3076925">
+          <caret line="163" column="29" selection-start-line="163" selection-start-column="29" selection-end-line="163" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/HastySpam.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.71141976">
-          <caret line="182" column="25" selection-start-line="182" selection-start-column="25" selection-end-line="182" selection-end-column="25" />
+        <state vertical-scroll-proportion="0.39967898">
+          <caret line="164" column="16" selection-start-line="164" selection-start-column="14" selection-end-line="164" selection-end-column="16" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>

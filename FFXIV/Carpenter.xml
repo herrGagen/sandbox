@@ -1,0 +1,12 @@
+<recipes>
+
+    <cp>339</cp>
+    <recipe>
+        <name>Cedar Lumber</name>
+        <durability>40</durability>
+        <careful_prog>46</careful_prog>
+        <total_prog>169</total_prog>
+        <num_mark>0</num_mark>
+        <stack_goal>8</stack_goal>
+    </recipe>
+</recipes>

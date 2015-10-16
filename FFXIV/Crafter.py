@@ -2,8 +2,7 @@ from FFXIV import *
 from CraftReader import *
 import math
 
-DEBUG = True
-
+DEBUG = False
 
 class Crafter:
     @staticmethod
@@ -102,7 +101,8 @@ class Crafter:
         else:
             progress = p * self.total_prog
             remaining_turns = math.ceil((self.total_prog - progress) / self.careful_prog)
-            print("Remaining turns: ", remaining_turns)
+            if(DEBUG):
+                print("Remaining touches: ", remaining_turns)
             return remaining_turns
 
     def display_status(self):
@@ -161,10 +161,10 @@ class Crafter:
         if self.spent_dur < 0:
             self.spent_dur = 0
 
-    def _send_action(self, key):
+    def _send_action(self, action):
         if DEBUG:
-            print("Sending %s" % key)
-        to_press = Crafter.keymap(key)
+            print("Sending %s" % action)
+        to_press = Crafter.keymap(action)
         self._ff.send_key(to_press)
         time.sleep(3)
 

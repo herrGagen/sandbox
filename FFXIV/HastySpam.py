@@ -164,17 +164,10 @@ class HastySpam(Crafter):
 if __name__=="__main__":
     import XMLRecipeReader as xrr
 
-    ## Cloud Mica Whetstone
-    cp = 338
-    durability = 35
-    careful_prog = 205
-    total_prog = 376
-    num_mark = 0
-    stack_goal = 8
     num_to_craft = 60
 
-    mn = HastySpam(*xrr.get_recipe_from_xml("goldsmithing.xml",
-                                            "Mythrite Nugget"))
+    mn = HastySpam(*xrr.get_recipe_from_xml("carpenter.xml",
+                                            "Cedar Lumber"))
     is_collectible = False
     for x in range(0,num_to_craft):
         mn.craft()
