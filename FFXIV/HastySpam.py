@@ -31,17 +31,22 @@ class HastySpam(Crafter):
         self.start_craft()
         if(self.mark_turns > 0):
             self.use_makers_mark(self.mark_turns)
+            needTricks = True
             for x in range(0,self.mark_turns):
-                self.use_flawless_synth()
+                if needTricks and self.tryTricks():
+                    needTricks = False
+                else:
+                    self.use_flawless_synth()
 
         self.try_tricks()
         self.use_comfort_zone()
         self.try_tricks()
         self.use_inner_quiet()
-        while(self.is_crafting):
+        while(self._calc_remaining_synths() > 0):
             remaining_turns = math.ceil((self.total_dur - self.spent_dur)/10) + self.manip_turns
             if (remaining_turns > self._calc_remaining_synths()
-                    and self.quality < 0.95):
+                    and self.quality < 0.95
+                    and self.stack_goal > 0):
                 self._increase_quality()
             else:
                 self._make_progress()
@@ -164,17 +169,19 @@ class HastySpam(Crafter):
 if __name__=="__main__":
     import XMLRecipeReader as xrr
 
-    num_to_craft = 60
+    num_to_craft = 3
+    mn = HastySpam(*xrr.get_recipe_from_xml("goldsmithing.xml",
+                                            "Aurum Regis Bracelet"))
 
-    mn = HastySpam(*xrr.get_recipe_from_xml("carpenter.xml",
-                                            "Cedar Lumber"))
-    is_collectible = False
+    is_collectible = True
     for x in range(0,num_to_craft):
+        print("Crafting %d of %d" % (x+1, num_to_craft))
         mn.craft()
         if(is_collectible):
             mn.accept_collectible()
             time.sleep(4)
         else:
-            time.sleep(5)
+            time.sleep(6)
+
 
 

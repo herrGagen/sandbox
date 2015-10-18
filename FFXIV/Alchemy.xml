@@ -1,0 +1,28 @@
+<recipes>
+    <cp>339</cp>
+    <recipe>
+        <name>Enchanted Mythrite Ink</name>
+        <durability>40</durability>
+        <careful_prog>45</careful_prog>
+        <total_prog>169</total_prog>
+        <num_mark>0</num_mark>
+        <stack_goal>0</stack_goal>
+    </recipe>
+    <recipe>
+        <name>Holy Water</name>
+        <durability>40</durability>
+        <careful_prog>91</careful_prog>
+        <total_prog>251</total_prog>
+        <num_mark>0</num_mark>
+        <stack_goal>8</stack_goal>
+    </recipe>
+    <recipe>
+        <name>Void Glue</name>
+        <durability>40</durability>
+        <careful_prog>114</careful_prog>
+        <total_prog>210</total_prog>
+        <num_mark>0</num_mark>
+        <stack_goal>8</stack_goal>
+    </recipe>
+
+</recipes>
