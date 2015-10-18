@@ -17,24 +17,24 @@ class HastySpam(Crafter):
                  durability,
                  careful_prog,
                  total_prog,
-                 num_mark,
+                 max_mark_turns,
                  stack_goal):
         Crafter.__init__(self,
                          cp,
                          durability,
                          careful_prog,
                          total_prog,
-                         num_mark,
+                         max_mark_turns,
                          stack_goal)
 
     def craft(self):
         self.start_craft()
-        if(self.mark_turns > 0):
-            self.use_makers_mark(self.mark_turns)
-            needTricks = True
+        if(self.max_mark_turns > 0):
+            self.use_makers_mark()
+            need_tricks = True
             for x in range(0,self.mark_turns):
-                if needTricks and self.tryTricks():
-                    needTricks = False
+                if need_tricks and self.try_tricks():
+                    need_tricks = False
                 else:
                     self.use_flawless_synth()
 
@@ -42,7 +42,8 @@ class HastySpam(Crafter):
         self.use_comfort_zone()
         self.try_tricks()
         self.use_inner_quiet()
-        while(self._calc_remaining_synths() > 0):
+        while(self.is_crafting and
+                self._calc_remaining_synths() > 0):
             remaining_turns = math.ceil((self.total_dur - self.spent_dur)/10) + self.manip_turns
             if (remaining_turns > self._calc_remaining_synths()
                     and self.quality < 0.95
@@ -169,11 +170,11 @@ class HastySpam(Crafter):
 if __name__=="__main__":
     import XMLRecipeReader as xrr
 
-    num_to_craft = 3
+    num_to_craft = 57
     mn = HastySpam(*xrr.get_recipe_from_xml("goldsmithing.xml",
-                                            "Aurum Regis Bracelet"))
+                                            "Hardsilver Nugget"))
 
-    is_collectible = True
+    is_collectible = False
     for x in range(0,num_to_craft):
         print("Crafting %d of %d" % (x+1, num_to_craft))
         mn.craft()

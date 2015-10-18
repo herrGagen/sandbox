@@ -14,13 +14,13 @@ def get_recipe_from_xml(filename, recipename):
     durability = int(recipe.find('durability').text)
     careful_prog = int(recipe.find('careful_prog').text)
     total_prog = int(recipe.find('total_prog').text)
-    num_mark = int(recipe.find('num_mark').text)
+    max_mark_turns = int(recipe.find('max_mark_turns').text)
     stack_goal = int(recipe.find('stack_goal').text)
     return (cp,
             durability,
             careful_prog,
             total_prog,
-            num_mark,
+            max_mark_turns,
             stack_goal)
 
 

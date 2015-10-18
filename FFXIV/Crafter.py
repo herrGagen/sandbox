@@ -44,16 +44,17 @@ class Crafter:
                  total_dur=40,
                  careful_prog=150,
                  total_prog=1500,
-                 num_mark=0,
+                 max_mark_turns=0,
                  stack_goal=9):
         self.max_cp = cp
-        self._reader = CraftReader()
-        self._ff = FFXIV()
+        self.total_dur = total_dur
         self.careful_prog = careful_prog
         self.total_prog = total_prog
-        self.total_dur = total_dur
-        self.num_mark = num_mark
+        self.max_mark_turns = max_mark_turns
         self.stack_goal = stack_goal
+
+        self._reader = CraftReader()
+        self._ff = FFXIV()
         self.cp = self.max_cp
         self.manip_turns = 0
         self.waste_turns = 0
@@ -203,13 +204,13 @@ class Crafter:
             self.cp -= 98
 
     ## Buffs
-    def use_makers_mark(self, turns):
+    def use_makers_mark(self):
         """Only works on first turn, makes flawless synth free"""
         if self.cp == self.max_cp:
             self._send_action("Makers Mark")
             self.cp -= 20
             self._advance_turn()
-            self.mark_turns = turns
+            self.mark_turns = self.max_mark_turns
 
     def use_inner_quiet(self):
         if self.cp >= 18:

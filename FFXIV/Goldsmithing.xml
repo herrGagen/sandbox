@@ -6,7 +6,7 @@
         <durability>35</durability>
         <careful_prog>205</careful_prog>
         <total_prog>376</total_prog>
-        <num_mark>0</num_mark>
+        <max_mark_turns>0</max_mark_turns>
         <stack_goal>8</stack_goal>
     </recipe>
     <recipe>
@@ -14,7 +14,7 @@
         <durability>40</durability>
         <careful_prog>227</careful_prog>
         <total_prog>165</total_prog>
-        <num_mark>0</num_mark>
+        <max_mark_turns>0</max_mark_turns>
         <stack_goal>6</stack_goal>
     </recipe>
     <recipe>
@@ -22,7 +22,7 @@
         <durability>70</durability>
         <careful_prog>196</careful_prog>
         <total_prog>808</total_prog>
-        <num_mark>9</num_mark>
+        <max_mark_turns>9</max_mark_turns>
         <stack_goal>10</stack_goal>
     </recipe>
     <recipe>
@@ -30,31 +30,23 @@
         <durability>35</durability>
         <careful_prog>187</careful_prog>
         <total_prog>431</total_prog>
-        <num_mark>0</num_mark>
+        <max_mark_turns>0</max_mark_turns>
         <stack_goal>10</stack_goal>
-    </recipe>
-    <recipe>
-        <name>Aurum Regis Nugget</name>
-        <durability>35</durability>
-        <careful_prog>149</careful_prog>
-        <total_prog>478</total_prog>
-        <num_mark>5</num_mark>
-        <stack_goal>8</stack_goal>
     </recipe>
     <recipe>
         <name>Hardsilver Nugget</name>
         <durability>40</durability>
         <careful_prog>221</careful_prog>
         <total_prog>320</total_prog>
-        <num_mark>4</num_mark>
-        <stack_goal>6</stack_goal>
+        <max_mark_turns>4</max_mark_turns>
+        <stack_goal>7</stack_goal>
     </recipe>
         <recipe>
         <name>Aurum Regis Bracelet</name>
         <durability>70</durability>
         <careful_prog>187</careful_prog>
         <total_prog>863</total_prog>
-        <num_mark>9</num_mark>
+        <max_mark_turns>9</max_mark_turns>
         <stack_goal>11</stack_goal>
     </recipe>
 </recipes>
