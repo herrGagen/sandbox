@@ -13,6 +13,7 @@ from find_teams import make_matching_teams
 render = web.template.render('templates/')
 
 urls = (
+    '/', 'CurlingRedirect',
     '/curling', 'CurlingRedirect',
     '/curling/(.*)', 'CurlingAttendance',
     '/schedule/(.*)', 'ScheduleOutput'
