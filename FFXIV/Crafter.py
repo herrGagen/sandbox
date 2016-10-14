@@ -167,7 +167,7 @@ class Crafter:
             print("Sending %s" % action)
         to_press = Crafter.keymap(action)
         self._ff.send_key(to_press)
-        time.sleep(3)
+        time.sleep(2.5)
 
     def accept_collectible(self):
         self._ff.send_key('#0')

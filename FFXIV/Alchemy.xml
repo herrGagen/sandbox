@@ -1,5 +1,5 @@
 <recipes>
-    <cp>339</cp>
+    <cp>336</cp>
     <recipe>
         <name>Enchanted Mythrite Ink</name>
         <durability>40</durability>
@@ -22,6 +22,14 @@
         <careful_prog>114</careful_prog>
         <total_prog>210</total_prog>
         <max_mark_turns>0</max_mark_turns>
+        <stack_goal>8</stack_goal>
+    </recipe>
+    <recipe>
+        <name>Grade One Dissolvent</name>
+        <durability>40</durability>
+        <careful_prog>97</careful_prog>
+        <total_prog>320</total_prog>
+        <max_mark_turns>4</max_mark_turns>
         <stack_goal>8</stack_goal>
     </recipe>
 </recipes>

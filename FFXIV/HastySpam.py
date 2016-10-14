@@ -48,11 +48,12 @@ class HastySpam(Crafter):
             if (remaining_turns > self._calc_remaining_synths()
                     and self.quality < 0.95
                     and self.stack_goal > 0):
-                self._increase_quality()
+                last_touch = remaining_turns == self._calc_remaining_synths() + 1
+                self._increase_quality(last_touch)
             else:
                 self._make_progress()
 
-    def _increase_quality(self):
+    def _increase_quality(self, last_touch = False):
         cond = self.condition
         if cond == Condition.Good or cond == Condition.Excellent:
             enough_dur = (self.spent_dur < 20 or self.manip_turns > 0)
@@ -79,7 +80,7 @@ class HastySpam(Crafter):
         if (self.total_dur-self.spent_dur) < 15:
             self._restore_durability()
 
-        if self.iq_stacks >= self.stack_goal:
+        if last_touch:
             self._do_last_touch()
             return
 
@@ -170,9 +171,9 @@ class HastySpam(Crafter):
 if __name__=="__main__":
     import XMLRecipeReader as xrr
 
-    num_to_craft = 57
-    mn = HastySpam(*xrr.get_recipe_from_xml("goldsmithing.xml",
-                                            "Hardsilver Nugget"))
+    num_to_craft = 15
+    mn = HastySpam(*xrr.get_recipe_from_xml("carpentry.xml",
+                                            "Dark Chestnut Lumber"))
 
     is_collectible = False
     for x in range(0,num_to_craft):

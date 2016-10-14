@@ -15,7 +15,15 @@
         <careful_prog>227</careful_prog>
         <total_prog>165</total_prog>
         <max_mark_turns>0</max_mark_turns>
-        <stack_goal>6</stack_goal>
+        <stack_goal>8</stack_goal>
+    </recipe>
+    <recipe>
+        <name>Mythrite Ingot</name>
+        <durability>40</durability>
+        <careful_prog>226</careful_prog>
+        <total_prog>251</total_prog>
+        <max_mark_turns>3</max_mark_turns>
+        <stack_goal>8</stack_goal>
     </recipe>
     <recipe>
         <name>Hardsilver Earring</name>
@@ -41,7 +49,15 @@
         <max_mark_turns>4</max_mark_turns>
         <stack_goal>7</stack_goal>
     </recipe>
-        <recipe>
+    <recipe>
+        <name>Hardsilver Ingot</name>
+        <durability>35</durability>
+        <careful_prog>205</careful_prog>
+        <total_prog>376</total_prog>
+        <max_mark_turns>4</max_mark_turns>
+        <stack_goal>9</stack_goal>
+    </recipe>
+    <recipe>
         <name>Aurum Regis Bracelet</name>
         <durability>70</durability>
         <careful_prog>187</careful_prog>

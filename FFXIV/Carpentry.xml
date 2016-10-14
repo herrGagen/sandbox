@@ -8,4 +8,12 @@
         <max_mark_turns>0</max_mark_turns>
         <stack_goal>8</stack_goal>
     </recipe>
+    <recipe>
+        <name>Dark Chestnut Lumber</name>
+        <durability>40</durability>
+        <careful_prog>49</careful_prog>
+        <total_prog>320</total_prog>
+        <max_mark_turns>0</max_mark_turns>
+        <stack_goal>8</stack_goal>
+    </recipe>
 </recipes>
