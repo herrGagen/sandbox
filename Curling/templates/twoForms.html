@@ -1,0 +1,11 @@
+$def with (form1, form2)
+
+<form name="form1" method="post"> 
+$if not form1.valid: <p class="error">Try again:</p>
+$:form1.render()
+<input type="submit" />    </form>
+
+<form name="form2" method="post"> 
+$if not form2.valid: <p class="error">Try again:</p>
+$:form2.render()
+<input type="submit" />    </form>
