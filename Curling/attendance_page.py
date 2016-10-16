@@ -42,6 +42,7 @@ def read_sheet_count():
 
 
 def write_roster(df):
+    print "Saved Roster"
     df.to_csv('roster.csv', index=False)
 
 
@@ -89,16 +90,16 @@ class CurlingAttendance:
         df = read_roster()
         roster = AttendanceForm(df, int(arg))
         dates = zip(map(str, range(len(df.columns) - 2)), df.columns[2:])
-        drop = web.form.Dropdown('week_drop',
+        drop = web.form.Dropdown('Today\'s Date',
                                  dates,
                                  value=arg)
         date = web.form.Form(drop)
         return render.twoForms(date(), roster())
 
     def POST(self, arg=[]):
-        i = web.input(week_drop={})
-        if i.week_drop:
-            raise web.seeother('{0}'.format(i.week_drop))
+        i = web.input()
+        if i.get('Today\'s Date', False):
+            raise web.seeother('{0}'.format(i['Today\'s Date']))
         else:
             df = read_roster()
             self.update_attendance(df, int(arg), i)

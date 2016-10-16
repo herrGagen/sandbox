@@ -7,11 +7,13 @@ Created on Mon Oct 03 00:16:25 2016
 import web
 import pandas as pd
 
+from StoplightRadioButton import StoplightRadioButton as srb
+
 class AttendanceForm(web.form.Form):
 
     class states:
          sick='Called In'
-         default='Unknown'
+         default='?'
          here='Here'
          reverse = {sick: 0, default: 1, here:2}
          as_list = [sick, default, here]
@@ -21,8 +23,9 @@ class AttendanceForm(web.form.Form):
         self.week_num = week_num
         buttons = []
         for i, _ in df.iterrows():
-            buttons.append(web.form.Radio(str(i),
-                                          AttendanceForm.states.as_list))
+            #web.form.Radio(str(i),
+            buttons.append(srb(str(i),
+                           AttendanceForm.states.as_list))
         web.form.Form.__init__(self, *buttons, **kw)
 
     def render(self):
@@ -36,9 +39,10 @@ class AttendanceForm(web.form.Form):
         out += '<th>Here?</th></tr>\n'
         for i in range(len(self.inputs)):
             radio = self.inputs[i]
-            sick = df.iloc[i,this_week] == 0
-            if sick:
+            if df.iloc[i, this_week] == 0:
                 radio.value = self.states.sick
+            elif df.iloc[i, this_week] == 2:
+                radio.value = self.states.here
             else:
                 radio.value = self.states.default
             out += '    <tr>'

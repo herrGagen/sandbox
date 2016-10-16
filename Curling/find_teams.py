@@ -64,7 +64,7 @@ def make_matching_teams(roster, ratings, sheet_count, week):
     factor = [1] * n_teams
     factor[n_full:] = [1.5] * (n_teams - n_full)
     for pos in ['Vice', 'Second', 'Lead']:
-        noise = np.random.randn(len(players))
+        noise = np.random.rand(len(players))
         players['sortcol'] = players[pos] + noise
         players.sort_values(by='sortcol', ascending=False, inplace=True)
         players.index = range(len(players))
