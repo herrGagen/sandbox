@@ -32,8 +32,10 @@ def sheet_score(player):
 
 
 def make_matching_teams(roster, ratings, sheet_count, week):
-    inds = roster.iloc[:, 2 + week] == 2
-    df = ratings.loc[inds, :].copy()
+    here = roster[roster.iloc[:, 2 + week] == 2]
+    df = pd.merge(here[['First Name', 'Last Name']],
+                  ratings,
+                  on=['First Name','Last Name'])
     df = df.merge(sheet_count, on=['First Name', 'Last Name'])
     df.fillna(0, inplace=True)
 
