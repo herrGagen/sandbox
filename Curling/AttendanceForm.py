@@ -33,7 +33,7 @@ class AttendanceForm(web.form.Form):
         df = self.df
         out = ''
         out += self.rendernote(self.note)
-        out += '<table><tr>\n'
+        out += '<table class="table table-striped"><tr>\n'
         out += '<th>First</th>\t'
         out += '<th>Last</th>\t'
         out += '<th>Here?</th></tr>\n'

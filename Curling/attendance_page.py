@@ -4,11 +4,15 @@ Created on Mon Sep 19 16:32:01 2016
 
 @author: johngalt
 """
-import pandas as pd
 import time
 import web
+
+from AddPlayer import AddPlayer
 from AttendanceForm import AttendanceForm
+
 from find_teams import make_matching_teams
+from curling_data import read_roster, read_ratings, read_sheet_count
+from curling_data import write_roster
 
 render = web.template.render('templates/')
 
@@ -16,34 +20,11 @@ urls = (
     '/', 'CurlingRedirect',
     '/curling', 'CurlingRedirect',
     '/curling/(.*)', 'CurlingAttendance',
-    '/schedule/(.*)', 'ScheduleOutput'
+    '/schedule/(.*)', 'ScheduleOutput',
+    '/addPlayer', 'AddPlayer'
 )
 
-app = web.application(urls, globals())
-if __name__ != "__main__":
-    app = app.wsgifunc()
-
-def read_roster():
-    df = pd.read_csv('roster.csv')
-    df.fillna(0, inplace=True)
-    for col in df.columns[2:]:
-        df[col] = map(int, df[col])
-    return df
-
-
-def read_ratings():
-    df = pd.read_csv('ratings.csv')
-    return df
-
-
-def read_sheet_count():
-    df = pd.read_csv('sheet_count.csv')
-    return df
-
-
-def write_roster(df):
-    print "Saved Roster"
-    df.to_csv('roster.csv', index=False)
+app = web.application(urls, globals()).wsgifunc()
 
 
 class ScheduleOutput:
@@ -108,4 +89,4 @@ class CurlingAttendance:
 
 
 if __name__ == "__main__":
-    web.httpserver.runsimple(app.wsgifunc(), ("0.0.0.0", 8123))
+    web.httpserver.runsimple(app, ("0.0.0.0", 8123))
