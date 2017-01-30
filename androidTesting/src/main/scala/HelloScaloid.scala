@@ -1,7 +1,7 @@
-package scaloid.example
+package androidtesting
 
-import org.scaloid.common._
 import android.graphics.Color
+import org.scaloid.common._
 
 class HelloScaloid extends SActivity {
   lazy val meToo = new STextView("Me too")
