@@ -15,15 +15,14 @@ class AttendanceForm(web.form.Form):
          sick='Called In'
          default='?'
          here='Here'
-         reverse = {sick: 0, default: 1, here:2}
-         as_list = [sick, default, here]
+         reverse = {sick: 0, default: 2, here:2}
+         as_list = [sick, here]
 
     def __init__(self, df, week_num=1, **kw):
         self.df = df
         self.week_num = week_num
         buttons = []
         for i, _ in df.iterrows():
-            #web.form.Radio(str(i),
             buttons.append(srb(str(i),
                            AttendanceForm.states.as_list))
         web.form.Form.__init__(self, *buttons, **kw)
@@ -41,10 +40,8 @@ class AttendanceForm(web.form.Form):
             radio = self.inputs[i]
             if df.iloc[i, this_week] == 0:
                 radio.value = self.states.sick
-            elif df.iloc[i, this_week] == 2:
-                radio.value = self.states.here
             else:
-                radio.value = self.states.default
+                radio.value = self.states.here
             out += '    <tr>'
             out += '<td>{0}</td>\t'.format(df.loc[i, 'First Name'])
             out += '<td>{0}</td>\n'.format(df.loc[i, 'Last Name'])
