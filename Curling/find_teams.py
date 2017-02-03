@@ -118,7 +118,7 @@ def assign_sheets(day_teams):
         for t in teams:
             retval.append(", ".join(t['players']))
         return retval
-    df =  pd.DataFrame({'Sheet': asgn,
+    df = pd.DataFrame({'Sheet': asgn,
                         'Players': player_column()})
     df.sort_values('Sheet', inplace=True)
     return df
@@ -127,4 +127,4 @@ def assign_sheets(day_teams):
 if __name__ == "__main__":
     ratings = pd.read_csv('ratings.csv')
     roster = pd.read_csv('roster.csv')
-    make_matching_teams(roster, ratings, 0)
+    make_matching_teams(roster, ratings, 2)

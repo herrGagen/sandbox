@@ -1,6 +1,5 @@
 $def with (form1, form2)
 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -16,12 +15,12 @@ $def with (form1, form2)
 
  <a href="/addPlayer">Register a substitute.</a>  
 <form name="form1" method="post"> 
-$if not form1.valid: <p class="error">Try again:</p>
+$if not form1.valid: <p class="error">Invalid form 1</p>
 $:form1.render()
 <input type="submit" />    </form>
 
 <form name="form2" method="post"> 
-$if not form2.valid: <p class="error">Try again:</p>
+$if not form2.valid: <p class="error">Invalid form 2</p>
 $:form2.render()
 <input type="submit" />    </form>
 
