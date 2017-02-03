@@ -15,8 +15,8 @@ class AttendanceForm(web.form.Form):
          sick='Called In'
          default='?'
          here='Here'
-         reverse = {sick: 0, default: 2, here:2}
-         as_list = [sick, here]
+         reverse = {sick: 0, default: 1, here:2}
+         as_list = [sick, default, here]
 
     def __init__(self, df, week_num=1, **kw):
         self.df = df
