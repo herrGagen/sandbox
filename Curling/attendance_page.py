@@ -7,6 +7,8 @@ Created on Mon Sep 19 16:32:01 2016
 import time
 import web
 
+import pandas as pd
+
 from AddPlayer import AddPlayer
 from AttendanceForm import AttendanceForm
 
@@ -34,7 +36,11 @@ class ScheduleOutput:
                                     read_ratings(),
                                     read_sheet_count(),
                                     int(arg))
-        return teams[['Sheet', 'Players']].to_html(index=False)
+        old_width = pd.get_option('display.max_colwidth')
+        pd.set_option('display.max_colwidth', -1)
+        html = teams[['Sheet', 'Players']].to_html(index=False)
+        pd.set_option('display.max_colwidth', old_width)
+        return html
 
 
 class CurlingRedirect:
