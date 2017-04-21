@@ -36,7 +36,7 @@ def make_matching_teams(roster, ratings, sheet_count, week):
     df = pd.merge(here[['First Name', 'Last Name']],
                   ratings,
                   on=['First Name','Last Name'])
-    df = df.merge(sheet_count, on=['First Name', 'Last Name'])
+    df = df.merge(sheet_count, on=['First Name', 'Last Name'], how='left')
     df.fillna(0, inplace=True)
 
     all_skips = df.sort_values(by='Skip', ascending=False)

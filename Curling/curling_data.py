@@ -31,3 +31,9 @@ def write_ratings(df):
 def read_sheet_count():
     df = pd.read_csv('sheet_count.csv')
     return df
+
+def write_sheet_count(df):
+    print "Saving sheet count"
+    df.sort_values(by=['Last Name', 'First Name'], inplace=True)
+    df.index = range(len(df))
+    df.to_csv('sheet_count.csv', index=False)

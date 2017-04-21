@@ -13,7 +13,7 @@ class StoplightRadioButton(web.form.Radio):
         is_checked = self.args[i % 3] == self.value
         color = 'primary'
         active = ' active'*is_checked
-        return '<label class="btn btn-' + color + active + '">\n'
+        return '<label class="btn btn-sm btn-' + color + active + '">\n'
 
     def render(self):
         x = '<div class="btn-group" data-toggle="buttons">\n'

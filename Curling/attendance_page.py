@@ -54,7 +54,7 @@ class CurlingRedirect:
         today = time.strftime("%m/%d/%y")
         try:
             week_num = days.index(today)
-        except:
+        except ValueError:
             week_num = 0
         raise web.seeother('curling/{0}'.format(week_num))
 
@@ -81,12 +81,12 @@ class CurlingAttendance:
                                  dates,
                                  value=arg)
         date = web.form.Form(drop)
-        return render.twoForms(date(), roster())
+        return render.attendance(date(), roster())
 
     def POST(self, arg=[]):
         i = web.input()
         if i.get('Today\'s Date', False):
-            raise web.seeother('{0}'.format(i['Today\'s Date']))
+            raise web.seeother('{0}'.format(['Today\'s Date']))
         else:
             df = read_roster()
             self.update_attendance(df, int(arg), i)

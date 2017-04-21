@@ -115,12 +115,18 @@
 -keep class android.test.InstrumentationTestRunner { <init>(...); }
 
 # view AndroidManifest.xml #generated:7
--keep class scaloid.example.HelloScaloid { <init>(...); }
+-keep class androidtesting.pack.HelloScaloid { <init>(...); }
 
 -dontobfuscate
 -dontoptimize
 -keepattributes Signature
--printseeds target/seeds.txt
--printusage target/usage.txt
+-printseeds target/sbt-seeds.txt
+-printusage target/sbt-usage.txt
 -dontwarn scala.collection.**
 -dontwarn org.scaloid.**
+-dontnote org.apache.http.**
+-dontnote android.net.http.**
+-dontwarn org.apache.**
+-keep public class org.apache.poi.** {*;}
+-keep class org.apache.http.**
+-keep interface org.apache.http.**
