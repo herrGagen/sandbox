@@ -103,7 +103,7 @@ class AddPlayer:
                                        name='I meant what I typed.')
             items = [suggest] + items + [verify]
         new_player = web.form.Form(*items)
-        return render.add_player(new_player)
+        return render.add_player(form=new_player)
 
     def find_similar_name(self, first, last):
         """
