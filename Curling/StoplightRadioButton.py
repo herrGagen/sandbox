@@ -11,7 +11,7 @@ class StoplightRadioButton(web.form.Radio):
 
     def classes(self, i):
         is_checked = self.args[i % 3] == self.value
-        color = ['danger', 'warning', 'success'][i % 3]
+        color = 'primary'
         active = ' active'*is_checked
         retval = '<label class="btn btn-' + color + active + '">\n'
         return retval
