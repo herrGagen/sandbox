@@ -2,11 +2,12 @@ First Name,Last Name,Lead,Second,Skip,Vice
 Daniel,Almon,1,1,,1
 Todd,Arbetter,4,2,,1
 Dan,Barbour,1,1,,1
+Daniel,Barbour,2,1,,0
 Chuck,Barnes,8,8,9.0,7
 Carolyn,Bird,2,1,,0
 Dee,Chaplin,3,3,1.0,3
 Jim,Chaplin,3,3,1.0,3
-Kieran,Chapman,8,8,2,8
+Kieran,Chapman,8,8,2.0,8
 Jonathan,Constantine,1,1,,1
 MaryBeth,Cordeiro,8,8,,9
 Laura,Corkery,2,3,1.0,2
@@ -41,6 +42,7 @@ Scott,McLeod,6,6,4.0,5
 Coleen,O'Connor,3,3,2.0,2
 Gail,O'Rourke,1,1,,1
 Erin,O'Shea,4,3,,3
+Erin,O'shea,7,7,3.0,5
 Jason,Pannone,1,1,,1
 Fin,Perkins,2,1,,0
 Tim,Perkins,2,1,,0
