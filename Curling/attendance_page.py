@@ -85,8 +85,10 @@ class CurlingAttendance:
 
     def POST(self, arg=[]):
         i = web.input()
+        print "i: {}".format(i)
+        print "arg: {}".format(arg)
         if i.get('Today\'s Date', False):
-            raise web.seeother('{0}'.format(['Today\'s Date']))
+            raise web.seeother('{0}'.format(i.get('Today\'s Date')))
         else:
             df = read_roster()
             self.update_attendance(df, int(arg), i)
