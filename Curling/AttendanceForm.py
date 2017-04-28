@@ -41,8 +41,10 @@ class AttendanceForm(web.form.Form):
             radio = self.inputs[i]
             if df.iloc[i, this_week] == 0:
                 radio.value = self.states.sick
-            else:
+            elif df.iloc[i, this_week] == 1:
                 radio.value = self.states.default
+            else:
+                radio.value = self.states.here
             out += '    <tr>'
             out += '<td>{0}</td>\t'.format(df.loc[i, 'First Name'])
             out += '<td>{0}</td>\n'.format(df.loc[i, 'Last Name'])
