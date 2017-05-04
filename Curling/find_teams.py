@@ -26,24 +26,76 @@ def calc_n_teams(n):
 
 
 def sheet_score(player):
+    """
+    High score means you got lots of bad sheets
+    """
     return player.bad_sheet**2 \
         + player.okay_sheet \
         - 2*player.best_sheet
+
+
+def find_premade_teams(merged, premade=None):
+    premade = [[('Daniel', 'Almon'),
+                ('Jonathan', 'Constantine'),
+                ('Jason', 'Littlefield'),
+                ('Jason', 'Pannone')]]
+    teams = []
+    for team in premade:
+        firsts = [p[0] for p in team]
+        lasts = [p[1] for p in team]
+        team_df = pd.DataFrame({'First Name': firsts,
+                                'Last Name': lasts})
+        team_players = team_df.merge(merged, on=['First Name', 'Last Name'])
+        for i, row in team_players.iterrows():
+            found = (merged['First Name'] == row['First Name']) & \
+                        (merged['Last Name'] == row['Last Name'])
+            ind = found[found].index
+            merged.drop(ind, inplace=True)
+
+        order = ['Skip', 'Vice', 'Second', 'Lead']
+        for pos in order:
+            team_players[pos] += np.random.rand(len(team_players))
+        team_players.sort_values(by='Skip', ascending=False)
+        team_players.index = range(len(team_players))
+        name, rating, sheet_value = to_player(team_players.iloc[0], 'Skip')
+        team_dict = {'players': [name],
+                     'rating': 2 * rating,
+                     'sheet_value': sheet_value}
+        team_players = team_players[1:]
+        for pos in order[:len(team_players)]:
+            team_players.sort_values(by=pos, ascending=False)
+            team_players.index = range(len(team_players))
+            name, rating, sheet_value = to_player(team_players.iloc[0], pos)
+            team_dict['players'] += [name]
+            team_dict['rating'] += rating
+            team_dict['sheet_value'] += sheet_value
+            team_players = team_players[1:]
+        teams.append(team_dict)
+    merged.index = range(len(merged))
+    return teams, merged
+
+
+def to_player(row, pos):
+    name = row['First Name'] + ' ' + row['Last Name']
+    rating = row[pos]
+    sheet_value = sheet_score(row)
+    return (name, rating, sheet_value)
 
 
 def make_matching_teams(roster, ratings, sheet_count, week):
     here = roster[roster.iloc[:, 2 + week] == 2]
     df = pd.merge(here[['First Name', 'Last Name']],
                   ratings,
-                  on=['First Name','Last Name'])
+                  on=['First Name', 'Last Name'])
     df = df.merge(sheet_count, on=['First Name', 'Last Name'], how='left')
     df.fillna(0, inplace=True)
 
+    premade, df = find_premade_teams(df)
     all_skips = df.sort_values(by='Skip', ascending=False)
 
     n_players = len(df)
     n_sheets, n_full = calc_n_teams(n_players)
-    n_teams = 2*n_sheets
+    n_teams = 2*n_sheets - len(premade)
     skips = all_skips.iloc[range(n_teams), :]
     players = df[~df.isin(skips)].copy()
     players.dropna(inplace=True)
@@ -52,9 +104,7 @@ def make_matching_teams(roster, ratings, sheet_count, week):
     skips = skips.reindex(np.random.permutation(skips.index))
     day_teams = []
     for ind, player in skips.iterrows():
-        name = player['First Name'] + ' ' + player['Last Name']
-        rating = player['Skip']
-        sheet_value = sheet_score(player)
+        name, rating, sheet_value = to_player(player, 'Skip')
         team = {'players': [name],
                 'rating': 2 * rating,
                 'sheet_value': sheet_value}
@@ -71,13 +121,8 @@ def make_matching_teams(roster, ratings, sheet_count, week):
         players.sort_values(by='sortcol', ascending=False, inplace=True)
         players.index = range(len(players))
 
-        def to_player(row):
-            name = row['First Name'] + ' ' + row['Last Name']
-            rating = row[pos]
-            sheet_value = sheet_score(player)
-            return (name, rating, sheet_value)
         for i in range(min(n_teams, len(players))):
-            p_name, p_rating, p_sheet_value = to_player(players.loc[i])
+            p_name, p_rating, p_sheet_value = to_player(players.loc[i], pos)
             team = day_teams[i]
             rating = team['rating'] + factor[i]*p_rating
             sheet_value = team['sheet_value'] + p_sheet_value
@@ -87,14 +132,28 @@ def make_matching_teams(roster, ratings, sheet_count, week):
                             'rating': rating,
                             'sheet_value': sheet_value}
         players = players[n_teams:].copy()
+        if premade:
+            nplayers = len(day_teams[0]['players'])
+            add_premades = [i for i, pteam in enumerate(premade)
+                            if len(pteam['players']) == nplayers]
+            for ind in sorted(add_premades, reverse=True):
+                day_teams.append(premade[ind])
+                del premade[ind]
+            n_teams += len(add_premades)
         day_teams.sort(key=lambda x: x['rating'])
     team_df = assign_sheets(day_teams)
     return team_df
 
 
 def assign_sheets(day_teams):
-
+    """
+    Assigns sheets to pairs of teams.  Those who have previously  played on
+    our worse sheets are more likely to play on good sheets in this routine.
+    """
     def sval(i):
+        """
+        How bad these two teams' sheet history has been.
+        """
         k = i - i % 2
         a = day_teams[k]
         b = day_teams[k+1]
@@ -102,14 +161,18 @@ def assign_sheets(day_teams):
             + b['sheet_value'] + b['rating']/100.0
 
     sheet_val = map(sval, range(len(day_teams)))
-    teams = [b for a, b in sorted(zip(sheet_val, day_teams))]
+    teams = [b for a, b in sorted(zip(sheet_val, day_teams), reverse=True)]
 
+    # Give lowest scoring teams the best sheets.
     n = len(day_teams)/2
     sheets = range(n / 2 + n % 2)
     sheets.reverse()
     backs = range(n / 2 + n % 2, n)
 
     def next_sheet(i):
+        """
+        Basically: inside sheets first, then outside.
+        """
         return 1 + (backs[i / 2] if i % 2 else sheets[i / 2])
     asgn = [next_sheet(i) for i in range(n) for _ in (0, 1)]
 
@@ -119,7 +182,7 @@ def assign_sheets(day_teams):
             retval.append(", ".join(t['players']))
         return retval
     df = pd.DataFrame({'Sheet': asgn,
-                        'Players': player_column()})
+                       'Players': player_column()})
     df.sort_values('Sheet', inplace=True)
     return df
 
