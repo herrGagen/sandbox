@@ -46,6 +46,8 @@ def find_premade_teams(merged, premade=None):
         team_df = pd.DataFrame({'First Name': firsts,
                                 'Last Name': lasts})
         team_players = team_df.merge(merged, on=['First Name', 'Last Name'])
+        if len(team_players) == 0:
+            continue
         for i, row in team_players.iterrows():
             found = (merged['First Name'] == row['First Name']) & \
                         (merged['Last Name'] == row['Last Name'])
@@ -90,13 +92,13 @@ def make_matching_teams(roster, ratings, sheet_count, week):
     df = df.merge(sheet_count, on=['First Name', 'Last Name'], how='left')
     df.fillna(0, inplace=True)
 
+    n_players = len(df)
     premade, df = find_premade_teams(df)
     all_skips = df.sort_values(by='Skip', ascending=False)
 
-    n_players = len(df)
     n_sheets, n_full = calc_n_teams(n_players)
-    n_teams = 2*n_sheets - len(premade)
-    skips = all_skips.iloc[range(n_teams), :]
+    n_teams = 2*n_sheets
+    skips = all_skips.iloc[range(n_teams-len(premade)), :]
     players = df[~df.isin(skips)].copy()
     players.dropna(inplace=True)
 
@@ -111,35 +113,35 @@ def make_matching_teams(roster, ratings, sheet_count, week):
         day_teams.append(team)
     day_teams.sort(key=lambda x: x['rating'])
 
+    for p in premade:
+        day_teams.append(p)
+
     # Round 2-4 draft: Each skip selects best player available
     # Then reorder teams so that weakest picks first next round
-    factor = [1] * n_teams
+    factor = [1] * len(day_teams)
     factor[n_full:] = [1.5] * (n_teams - n_full)
-    for pos in ['Vice', 'Second', 'Lead']:
+    for num, pos in enumerate(['Vice', 'Second', 'Lead']):
         noise = np.random.rand(len(players))
         players['sortcol'] = players[pos] + noise
         players.sort_values(by='sortcol', ascending=False, inplace=True)
         players.index = range(len(players))
-
-        for i in range(min(n_teams, len(players))):
-            p_name, p_rating, p_sheet_value = to_player(players.loc[i], pos)
-            team = day_teams[i]
-            rating = team['rating'] + factor[i]*p_rating
+        premade_passed = 0
+        for i, team in enumerate(day_teams):
+            if i >= len(players):
+                continue
+            if len(team['players']) > num+1:
+                premade_passed += 1
+                continue
+            ind = i - premade_passed
+            p_name, p_rating, p_sheet_value = to_player(players.loc[ind], pos)
+            rating = team['rating'] + factor[ind]*p_rating
             sheet_value = team['sheet_value'] + p_sheet_value
             names = team['players']
             names.append(p_name)
-            day_teams[i] = {'players': names,
-                            'rating': rating,
-                            'sheet_value': sheet_value}
-        players = players[n_teams:].copy()
-        if premade:
-            nplayers = len(day_teams[0]['players'])
-            add_premades = [i for i, pteam in enumerate(premade)
-                            if len(pteam['players']) == nplayers]
-            for ind in sorted(add_premades, reverse=True):
-                day_teams.append(premade[ind])
-                del premade[ind]
-            n_teams += len(add_premades)
+            team.update({'players': names,
+                         'rating': rating,
+                         'sheet_value': sheet_value})
+        players = players[n_teams-premade_passed:].copy()
         day_teams.sort(key=lambda x: x['rating'])
     team_df = assign_sheets(day_teams)
     return team_df
@@ -190,4 +192,4 @@ def assign_sheets(day_teams):
 if __name__ == "__main__":
     ratings = pd.read_csv('ratings.csv')
     roster = pd.read_csv('roster.csv')
-    make_matching_teams(roster, ratings, 2)
+    sheet_count = read_sheet_count()
