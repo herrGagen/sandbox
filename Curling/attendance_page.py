@@ -85,8 +85,8 @@ class CurlingAttendance:
 
     def POST(self, arg=[]):
         i = web.input()
-        print "i: {}".format(i)
-        print "arg: {}".format(arg)
+#        print "i: {}".format(i)
+#        print "arg: {}".format(arg)
         if i.get('Today\'s Date', False):
             raise web.seeother('{0}'.format(i.get('Today\'s Date')))
         else:

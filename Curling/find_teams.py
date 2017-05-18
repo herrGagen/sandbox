@@ -35,10 +35,9 @@ def sheet_score(player):
 
 
 def find_premade_teams(merged, premade=None):
-    premade = [[('Daniel', 'Almon'),
-                ('Jonathan', 'Constantine'),
-                ('Jason', 'Littlefield'),
-                ('Jason', 'Pannone')]]
+    premade = [[('Scott', 'McLeod'),
+                ('Andrew', 'Jussaume'),
+                ('Dick', 'Dawson')]]
     teams = []
     for team in premade:
         firsts = [p[0] for p in team]
